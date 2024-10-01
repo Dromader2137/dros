@@ -4,7 +4,7 @@
     "spacing": 4, // Gaps between modules (4px)
     "modules-left": ["clock"],
     "modules-center": ["hyprland/workspaces"],
-    "modules-right": ["tray", "network"],
+    "modules-right": ["tray", "battery", "network"],
     "hyprland/workspaces": {
         "disable-scroll": true,
         "warp-on-scroll": false,
