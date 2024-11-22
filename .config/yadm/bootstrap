@@ -6,6 +6,4 @@ makepkg -si
 cd ..
 rm -rf yay
 yay -Syyu --needed - < ~/.config/yadm/packages
-systemctl enable --now docker.socket
-systemctl enable --now greetd.service
 systemctl enable --now pipewire-pulse.service
