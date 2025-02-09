@@ -1,39 +1,42 @@
 * {
-    font-family: Mononoki Nerd Font, Roboto, Helvetica, Arial, sans-serif;
-    font-size: 14px;
-	font-weight: 900;
+  font-family: Mononoki Nerd Font;
+  font-size: 14px;
+  font-weight: 900;
 }
 
 window#waybar {
-    background-color: rgba(40, 40, 40, 1.0);
-    color: #ebdbb2;
-    transition-property: background-color;
-    transition-duration: .5s;
-	border-bottom: 2px;
-	border-style: solid;
-	border-color: #ebdbb2;
+  background-color: #282828;
+  color: #ebdbb2;
+  border-bottom: 2px;
+  border-style: solid;
+  border-color: #ebdbb2;
+  padding: 20px 20px 20px 20px;
+}
+
+#workspaces {
+  font-size: 30px;
 }
 
 #workspaces button {
-    color: #ebdbb2;
-	border-radius: 0px;
-	padding: 0px 1px 0px 2px;
+  color: #ebdbb2;
+  border-radius: 0px;
+  padding: 0px 4px 0px 5px;
 }
 
 #workspaces button:hover {
-	background-color: #ebdbb2;
-	color: #282828;
-	border-width: 1px;
-	border-color: #ebdbb2;
+  background-color: #ebdbb2;
+  color: #282828;
+  border-width: 1px;
+  border-color: #ebdbb2;
 }
 
 #workspaces button.active {
-    background-color: #ebdbb2;
-	color: #282828;
+  background-color: #ebdbb2;
+  color: #282828;
 }
 
 #workspaces button.urgent {
-    color: #cc241d;
+  color: #cc241d;
 }
 
 #clock,
@@ -44,35 +47,45 @@ window#waybar {
 #tray,
 
 #window,
-.modules-left > widget:first-child > #workspaces {
-    margin-left: 0;
+.modules-left>widget:first-child>#workspaces {
+  margin-left: 0;
 }
 
-.modules-right > widget:last-child > #workspaces {
-    margin-right: 0;
+.modules-right>widget:last-child>#workspaces {
+  margin-right: 0;
+}
+
+#cpu {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#memory {
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 #clock {
-	margin-left: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 #battery {
-	margin-left: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 #battery.critical:not(.charging) {
-    color: #cc241d;
+  color: #cc241d;
 }
 
 #network {
-	margin-right: 10px;
-	margin-left: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 #tray {
-    color: #ebdbb2;
-	margin-left: 20px;
-}
-
-#mpd {
+  color: #ebdbb2;
+  margin-left: 10px;
+  margin-right: 10px;
 }

@@ -43,9 +43,10 @@ color: #ebdbb2;
 }
 
 #entry:selected {
-background-color: #a89984;
+background-color: #ebdbb2;
 }
 
 #entry:selected #text {
+color: #282828;
 font-weight: bold;
 }
