@@ -1,6 +1,6 @@
 * {
   font-family: Mononoki Nerd Font;
-  font-size: 14px;
+  font-size: 11pt;
   font-weight: 900;
 }
 
@@ -14,7 +14,7 @@ window#waybar {
 }
 
 #workspaces {
-  font-size: 30px;
+  font-size: 10px;
 }
 
 #workspaces button {
@@ -30,7 +30,7 @@ window#waybar {
   border-color: #ebdbb2;
 }
 
-#workspaces button.active {
+#workspaces button.focused {
   background-color: #ebdbb2;
   color: #282828;
 }
