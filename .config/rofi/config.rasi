@@ -1,5 +1,6 @@
 configuration {
     modes: [window,drun,run,ssh,calc];
+    show-icons: true;
 }
 
 @theme "default"
