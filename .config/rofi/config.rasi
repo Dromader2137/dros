@@ -1,5 +1,5 @@
 configuration {
-    modes: [window,drun,run,ssh,calc];
+    modes: [window,drun,run,ssh,calc,filebrowser];
     show-icons: true;
 }
 
@@ -34,6 +34,8 @@ configuration {
     alternate-urgent-foreground: @red;
     alternate-urgent-background: @lightbg;
     spacing:                     2;
+    font:                        "Mononoki Nerd Font 12";
+    lines:                       15;
 }
 window {
     background-color: @background;
@@ -59,7 +61,7 @@ listview {
     border-color:     @separatorcolor;
     spacing:          0px ;
     scrollbar:        true;
-    padding:          2px 0px 0px ;
+    padding:          6px 0px 0px ;
 }
 element-text, element-icon {
     background-color: inherit;
@@ -67,7 +69,7 @@ element-text, element-icon {
 }
 element {
     border:           0;
-    padding:          1px ;
+    padding:          6px ;
 }
 element normal.normal {
     background-color: @normal-background;
