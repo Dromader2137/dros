@@ -43,6 +43,7 @@ floating_modifier $mod normal
 
 bindsym $mod+Shift+r reload
 
+bindsym $mod+Escape exec swaylock
 bindsym $mod+Control+Escape exit
 bindsym $mod+Shift+Escape exec shutdown now
 
