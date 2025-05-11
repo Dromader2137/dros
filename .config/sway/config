@@ -5,15 +5,11 @@ set $up k
 set $right l
 set $term kitty
 
-output DP-2 resolution 2560x1440 position 0 0 adaptive_sync on bg ~/wallpapers/fantasy-art-futuristic-vehicle-artwork-airplane-aircraft-dog-spaceship-military-aircraft-Battleship-Battlecruiser-screenshot-atmosphere-of-earth-fighter-aircraft-jet-aircraft-118517-206336198.jpg fill
+output DP-2 resolution 2560x1440 position 0 0 render_bit_depth 10 bg ~/wallpapers/fantasy-art-futuristic-vehicle-artwork-airplane-aircraft-dog-spaceship-military-aircraft-Battleship-Battlecruiser-screenshot-atmosphere-of-earth-fighter-aircraft-jet-aircraft-118517-206336198.jpg fill 
 output eDP-1 resolution 1920x1080 position -1920 0 bg ~/wallpapers/31899-Halo-spaceship-UNSC_Infinity-digital_art-3300705155.jpg fill
 
 exec waybar
 exec mpd &
-
-set $laptop eDP-1
-bindswitch --reload --locked lid:on output $laptop disable
-bindswitch --reload --locked lid:off output $laptop enable
 
 input "type:keyboard" {
     xkb_layout pl
