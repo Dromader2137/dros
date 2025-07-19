@@ -1,0 +1,31 @@
+* {
+  all: unset; 
+  font-family: Mononoki Nerd Font;
+  font-size: 12pt;
+  font-weight: 900;
+}
+
+.bar {
+  background-color: #282828;
+  color: #ebdbb2;
+  padding: 0px;
+  border-bottom: #ebdbb2 solid 2px;
+}
+
+.leftstuff {
+  padding-left: 10px;
+}
+
+.rightstuff {
+  padding-right: 10px;
+}
+
+.workspaces .unfocused {
+  padding: 0px 4px 0px 4px;
+}
+
+.workspaces .focused {
+  padding: 0px 4px 0px 4px;
+  background-color: #ebdbb2;
+  color: #282828
+}

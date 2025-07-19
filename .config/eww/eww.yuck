@@ -1,0 +1,62 @@
+(defwidget bar []
+  (centerbox :orientation "h"
+    (leftstuff)
+    (centerstuff)
+    (rightstuff)))
+
+(defwidget rightstuff []
+  (box :class "rightstuff" :orientation "h" :space-evenly false :spacing 20 :halign "end"
+    (box "  ${round(EWW_RAM.used_mem_perc, 0)}%")
+    (box "  ${round(EWW_CPU.avg, 0)}%")
+    (box "󱐋 ${round(EWW_BATTERY.BAT0.capacity, 0)}%")
+    (box "  ${net}")
+  ))
+
+(defwidget leftstuff []
+  (box :class "leftstuff" :orientation "h" :space-evenly false :spacing 20 :halign "start"
+    time
+  ))
+
+(defpoll time :interval "10s"
+  "date '+%H:%M %Y-%m-%d'")
+
+(defpoll net :interval "5s"
+  "nmcli -t -f NAME connection show --active | head -n 1"
+)
+
+(defwidget centerstuff []
+  (box :class "centerstuff" :orientation "h" :space-evenly false :spacing 20 :halign "center"
+    (workspaces)
+  ))
+
+(defwidget workspaces []
+  (box :class "workspaces"
+       :orientation "h"
+       :space-evenly true
+       :halign "center"
+      (box :class {fws == "1" ? "focused" : "unfocused"} "一")
+      (box :class {fws == "2" ? "focused" : "unfocused"} "二")
+      (box :class {fws == "3" ? "focused" : "unfocused"} "三")
+      (box :class {fws == "4" ? "focused" : "unfocused"} "四")
+      (box :class {fws == "5" ? "focused" : "unfocused"} "五")
+      (box :class {fws == "6" ? "focused" : "unfocused"} "六")
+      (box :class {fws == "7" ? "focused" : "unfocused"} "七")
+      (box :class {fws == "8" ? "focused" : "unfocused"} "八")
+      (box :class {fws == "9" ? "focused" : "unfocused"} "九")
+      (box :class {fws == "10" ? "focused" : "unfocused"} "十")
+  ))
+
+(deflisten fws :initial "1"
+  "scripts/get-focused-workspace")
+
+(defwindow bar
+  :monitor 0
+  :stacking "fg"
+  :exclusive true
+  :focusable "false"
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      :width "100%"
+                      :height "32px"
+                      :anchor "top center")
+  (bar))
