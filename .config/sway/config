@@ -3,12 +3,12 @@ set $left h
 set $down j
 set $up k
 set $right l
-set $term kitty
+set $term alacritty
 
-output DP-2 resolution 2560x1440 position 0 0 render_bit_depth 10 bg ~/wallpapers/fantasy-art-futuristic-vehicle-artwork-airplane-aircraft-dog-spaceship-military-aircraft-Battleship-Battlecruiser-screenshot-atmosphere-of-earth-fighter-aircraft-jet-aircraft-118517-206336198.jpg fill 
+output DP-2 resolution 2560x1440 position 0 0 adaptive_sync on bg ~/wallpapers/fantasy-art-futuristic-vehicle-artwork-airplane-aircraft-dog-spaceship-military-aircraft-Battleship-Battlecruiser-screenshot-atmosphere-of-earth-fighter-aircraft-jet-aircraft-118517-206336198.jpg fill 
 output eDP-1 resolution 1920x1080 position -1920 0 bg ~/wallpapers/31899-Halo-spaceship-UNSC_Infinity-digital_art-3300705155.jpg fill
 
-exec waybar
+exec eww open bar
 exec mpd &
 
 input "type:keyboard" {
@@ -21,7 +21,7 @@ client.unfocused "#282828" "#282828" "#282828" "#282828"
 client.focused "#ebdbb2" "#ebdbb2" "#ebdbb2" "#ebdbb2"
 gaps inner 12
 
-for_window [title="winit window"] floating enable
+for_window [title="Oxide test"] floating enable
 
 bindsym $mod+Return exec $term
 
@@ -29,11 +29,10 @@ bindsym $mod+q kill
 bindsym $mod+w exec librewolf
 bindsym $mod+p exec rofi -show drun
 bindsym $mod+s exec rofi -show ssh
-bindsym $mod+f exec rofi -show filebrowser
 bindsym $mod+c exec rofi -show calc -modi calc -no-show-match -no-sort -terse | wl-copy
-bindsym $mod+m exec alacritty -e ncmpcpp
-bindsym $mod+b exec alacritty -e .cargo/bin/bluetui
-bindsym $mod+a exec alacritty -e pulsemixer
+bindsym $mod+m exec $term -e ncmpcpp
+bindsym $mod+b exec $term -e .cargo/bin/bluetui
+bindsym $mod+a exec $term -e pulsemixer
 
 bindsym $mod+Control+i exec pamixer -i 5
 bindsym $mod+Control+d exec pamixer -d 5
@@ -89,9 +88,8 @@ bindsym $mod+Shift+8 move container to workspace number 8
 bindsym $mod+Shift+9 move container to workspace number 9
 bindsym $mod+Shift+0 move container to workspace number 10
 
-bindsym $mod+Shift+f fullscreen
+bindsym $mod+f fullscreen
 bindsym $mod+space floating toggle
-bindsym $mod+Shift+space focus mode_toggle
 
 bindsym --locked XF86AudioMute exec pactl set-sink-mute \@DEFAULT_SINK@ toggle
 bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume \@DEFAULT_SINK@ -5%

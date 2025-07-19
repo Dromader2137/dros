@@ -1,6 +1,7 @@
 configuration {
-    modes: [window,drun,run,ssh,calc,filebrowser];
-    show-icons: true;
+    modes: [drun,ssh,calc];
+    show-icons: false;
+    drun-display-format: "{name}";
 }
 
 @theme "default"
@@ -34,23 +35,25 @@ configuration {
     alternate-urgent-foreground: @red;
     alternate-urgent-background: @lightbg;
     spacing:                     2;
-    font:                        "Mononoki Nerd Font 12";
-    lines:                       15;
+    font:                        "Mononoki Nerd Font Bold 12";
+    lines:                       5;
 }
 window {
     background-color: @background;
-    border:           2;
+    border:           0px 0px 0px 2px;
     padding:          5;
-    width:            20%;
+    width:            300px;
+    height:           100%;
+    location:         north east;
 }
 mainbox {
     border:           0;
     padding:          0;
 }
 message {
-    border:           1px dash 0px 0px ;
+    border:           2px solid 0px 0px ;
     border-color:     @separatorcolor;
-    padding:          1px ;
+    padding:          2px ;
 }
 textbox {
     text-color:       @foreground;
