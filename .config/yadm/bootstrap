@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si
-cd ..
-rm -rf yay
-yay -Syyu --needed - < ~/.config/yadm/packages
-systemctl enable --now pipewire-pulse.service
