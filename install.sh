@@ -141,40 +141,38 @@ if gum confirm "Do you want to setup graphical environment?"; then
   XDG_MUSIC_DIR="$HOME/music"
   XDG_PICTURES_DIR="$HOME/pictures"
   XDG_VIDEOS_DIR="$HOME/videos"
-  for dir in "$XDG_DESKTOP_DIR" "$XDG_DOWNLOAD_DIR" "$XDG_TEMPLATES_DIR" \
-    "$XDG_PUBLICSHARE_DIR" "$XDG_DOCUMENTS_DIR" "$XDG_MUSIC_DIR" \
-    "$XDG_PICTURES_DIR" "$XDG_VIDEOS_DIR"; do
-  if [ ! -d "$dir" ]; then
-    info "Creating $dir"
-    mkdir -p "$dir"
-  else
-    warn "Directory $dir already exists"
+  for dir in "$XDG_DESKTOP_DIR" "$XDG_DOWNLOAD_DIR" "$XDG_TEMPLATES_DIR" "$XDG_PUBLICSHARE_DIR" "$XDG_DOCUMENTS_DIR" "$XDG_MUSIC_DIR" "$XDG_PICTURES_DIR" "$XDG_VIDEOS_DIR"; do
+    if [ ! -d "$dir" ]; then
+      info "Creating $dir"
+      mkdir -p "$dir"
+    else
+      warn "Directory $dir already exists"
+    fi
+  done
+
+
+  if gum confirm "Do you want to setup sound with Pipewire?"; then
+    info "Installing Pipewire, Pipewire-Pulse, WirePlumber, and Pulsemixer"
+    "$aur_helper" -S --noconfirm --needed pipewire pipewire-pulse wireplumber
+    "$aur_helper" -S --noconfirm --needed pulsmixer
+    info "Enabling and starting Pipewire services"
+    systemctl --user enable --now pipewire pipewire-pulse wireplumber
   fi
-done
 
+  if gum confirm "Do you want to setup sound with MPD and NCMPCPP?"; then
+    info "Installing MPD and ncmpcpp"
+    "$aur_helper" -S --noconfirm --needed mpd ncmpcpp
+    info "Creating MPD configuration directory"
+    copy_config "$CLONE_DIR/.config/mpd" "$HOME/.config/mpd"
+  fi
 
-if gum confirm "Do you want to setup sound with Pipewire?"; then
-  info "Installing Pipewire, Pipewire-Pulse, WirePlumber, and Pulsemixer"
-  "$aur_helper" -S --noconfirm --needed pipewire pipewire-pulse wireplumber
-  "$aur_helper" -S --noconfirm --needed pulsmixer
-  info "Enabling and starting Pipewire services"
-  systemctl --user enable --now pipewire pipewire-pulse wireplumber
-fi
-
-if gum confirm "Do you want to setup sound with MPD and NCMPCPP?"; then
-  info "Installing MPD and ncmpcpp"
-  "$aur_helper" -S --noconfirm --needed mpd ncmpcpp
-  info "Creating MPD configuration directory"
-  copy_config "$CLONE_DIR/.config/mpd" "$HOME/.config/mpd"
-fi
-
-if gum confirm "Do you want to setup Bluetooth?"; then
-  info "Installing Bluetooth packages"
-  "$aur_helper" -S --noconfirm --needed bluez bluez-utils
-  "$aur_helper" -S --noconfirm --needed bluetuith
-  info "Enabling and starting Bluetooth service"
-  sudo systemctl enable --now bluetooth
-fi
+  if gum confirm "Do you want to setup Bluetooth?"; then
+    info "Installing Bluetooth packages"
+    "$aur_helper" -S --noconfirm --needed bluez bluez-utils
+    "$aur_helper" -S --noconfirm --needed bluetuith
+    info "Enabling and starting Bluetooth service"
+    sudo systemctl enable --now bluetooth
+  fi
 fi
 
 
