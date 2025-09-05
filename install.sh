@@ -197,8 +197,8 @@ if gum confirm "Do you want to setup graphical environment?"; then
   if gum confirm "Do you want to setup sound with MPD and NCMPCPP?"; then
     info "Installing MPD and NCMPCPP"
     run_cmd ""$AUR_HELPER" -S --noconfirm --needed mpd ncmpcpp"
-    copy_config "$CLONE_DIR/.config/mpd" "$HOME/.config/mpd"
-    copy_config "$CLONE_DIR/.config/ncmpcpp" "$HOME/.config/ncmpcpp"
+    copy_config "$CLONE_DIR/configs/mpd" "$HOME/.config/mpd"
+    copy_config "$CLONE_DIR/configs/ncmpcpp" "$HOME/.config/ncmpcpp"
   fi
 
   if gum confirm "Do you want to setup Bluetooth?"; then
