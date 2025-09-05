@@ -23,7 +23,6 @@ copy_config() {
 }
 
 LOG_FILE="/tmp/arch-setup.log"
-
 run_cmd() {
     local cmd="$*"
     echo -e "\n Running: $cmd" >> "$LOG_FILE"
@@ -45,7 +44,6 @@ run_cmd "sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubunt
 run_cmd "sudo pacman-key --lsign-key 3056513887B78AEB"
 run_cmd "sudo pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'"
 run_cmd "sudo pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'"
-
 if ! grep -q "chaotic-aur" /etc/pacman.conf; then
     run_cmd "echo -e '\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' | sudo tee -a /etc/pacman.conf"
     run_cmd "sudo pacman -Syu --noconfirm"
@@ -54,8 +52,7 @@ else
 fi
 
 info "Choose an AUR helper"
-AUR_HELPER=$(gum choose "yay" "paru" --cursor.foreground 212 --height 3)
-
+AUR_HELPER=$(gum choose "yay" "paru" --cursor.foreground 212 --height 2)
 if [[ "$AUR_HELPER" == "yay" ]]; then
     info "Installing yay"
     run_cmd "sudo pacman -S --noconfirm yay"
@@ -71,45 +68,37 @@ if [ -d "$CLONE_DIR" ]; then
   warn "Config directory already exists at $CLONE_DIR, removing it."
   run_cmd "rm -rf "$CLONE_DIR""
 fi
-
 info "Cloning config repo from $CONFIG_REPO"
 run_cmd "git clone "$CONFIG_REPO" "$CLONE_DIR""
 
 if gum confirm "Do you want to setup fish?"; then
-  info "Installing Fish shell"
+  info "Installing Fish"
   run_cmd ""$AUR_HELPER" -S --noconfirm --needed fish"
-  info "Installing eza (ls replacement with nice colors)"
+  info "Installing Eza (ls replacement with nice colors)"
   run_cmd ""$AUR_HELPER" -S --noconfirm --needed eza"
-  info "Setting Fish as default shell for the current user"
+  info "Setting Fish as the default shell"
   run_cmd "sudo chsh -s /usr/bin/fish "$USER""
   copy_config "$CLONE_DIR/.config/fish" "$HOME/.config/fish"
 
   if gum confirm "Do you want to install Starship prompt?"; then
-    info "Installing Starship prompt"
+    info "Installing Starship"
     run_cmd ""$AUR_HELPER" -S --noconfirm --needed starship"
-    copy_config "$CLONE_DIR/.config/starship.toml" "$HOME/.config/starship.toml"
+    copy_config "$CLONE_DIR/configs/starship.toml" "$HOME/.config/starship.toml"
   fi
 fi
 
 if gum confirm "Do you want to setup nvim?"; then
   info "Installing Neovim"
   run_cmd ""$AUR_HELPER" -S --noconfirm --needed neovim"
-  copy_config "$CLONE_DIR/.config/nvim" "$HOME/.config/nvim"
+  copy_config "$CLONE_DIR/configs/nvim" "$HOME/.config/nvim"
 fi
 
 GRAPHICS_ENV="none"
 
 if gum confirm "Do you want to setup graphical environment?"; then
-  info "Choose your graphical driver(s) to install (use space to select multiple)"
+  info "Choose your graphical driver to install"
 
-  DRIVER_CHOICE=$(gum choose --no-limit \
-    "intel" \
-    "amd" \
-    "nvidia" \
-    "nvidia-opensource" \
-    "none" \
-    --cursor.foreground 212 \
-    --height 5)
+  DRIVER_CHOICE=$(gum choose --limit=1 "intel" "amd" "nvidia" "nvidia-opensource" "none" --cursor.foreground 212 --height 5)
 
   for DRIVER in $DRIVER_CHOICE; do
     case "$DRIVER" in
@@ -126,7 +115,7 @@ if gum confirm "Do you want to setup graphical environment?"; then
         run_cmd ""$AUR_HELPER" -S --noconfirm --needed nvidia-open nvidia-utils libva-nvidia-driver"
         ;;
       nvidia-opensource)
-        info "Installing NVIDIA open-source driver"
+        info "Installing NVIDIA open-source drivers"
         run_cmd ""$AUR_HELPER" -S --noconfirm --needed mesa vulkan-nouveau"
         ;;
       none)
@@ -139,38 +128,43 @@ if gum confirm "Do you want to setup graphical environment?"; then
   done
 
   info "Installing desktop packages"
-  run_cmd ""$AUR_HELPER" -S --noconfirm --needed qt5ct qt6ct hyprland alacritty eww imv rofi zathura librewolf zathura slurp grim mpv ttf-mononoki-nerd nerd-fonts-symbols-mono nerd-fonts-symbols nerd-fonts-symbols-common noto-fonts-emoji hyprlock ttf-hanazono bibata-cursor-translucent"
+  run_cmd ""$AUR_HELPER" -S --noconfirm --needed qt5ct qt6ct hyprland alacritty eww jq socat imv rofi zathura librewolf slurp grim mpv ttf-mononoki-nerd nerd-fonts-symbols-mono nerd-fonts-symbols nerd-fonts-symbols-common noto-fonts-emoji hyprlock ttf-hanazono bibata-cursor-translucent"
+
   GRAPHICS_ENV="hypr"
 
   run_cmd "librewolf --headless & sleep 5; pkill librewolf"
   LIBREWOLF_PROFILE_DIR=$(find "$HOME/.librewolf" -maxdepth 1 -type d -name "*.default-default" | head -n 1)
   if [ -d "$LIBREWOLF_PROFILE_DIR" ]; then
-    copy_config "$CLONE_DIR/userChrome.css" "$LIBREWOLF_PROFILE_DIR/chrome/userChrome.css"
+    copy_config "$CLONE_DIR/configs/userChrome.css" "$LIBREWOLF_PROFILE_DIR/chrome/userChrome.css"
     echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' >> "$LIBREWOLF_PROFILE_DIR/user.js"
+    echo 'user_pref("browser.toolbars.bookmarks.visibility", "never");' >> "$LIBREWOLF_PROFILE_DIR/user.js"
   else
     warn "LibreWolf profile not found, skipping chrome config"
   fi
 
-  copy_config "$CLONE_DIR/.themes" "$HOME/.themes"
-  copy_config "$CLONE_DIR/.gtkrc-2.0" "$HOME/.gtkrc-2.0"
-  copy_config "$CLONE_DIR/.config/alacritty" "$HOME/.config/alacritty"
-  copy_config "$CLONE_DIR/.config/eww" "$HOME/.config/eww"
-  copy_config "$CLONE_DIR/.config/imv" "$HOME/.config/imv"
-  copy_config "$CLONE_DIR/.config/rofi" "$HOME/.config/rofi"
-  copy_config "$CLONE_DIR/.config/zathura" "$HOME/.config/zathura"
-  copy_config "$CLONE_DIR/.config/qt5ct" "$HOME/.config/qt5ct"
-  copy_config "$CLONE_DIR/.config/qt6ct" "$HOME/.config/qt6ct"
-  copy_config "$CLONE_DIR/.config/gtk-3.0" "$HOME/.config/gtk-3.0"
-  copy_config "$CLONE_DIR/.config/gtk-4.0" "$HOME/.config/gtk-4.0"
-  copy_config "$CLONE_DIR/.config/xsettingsd" "$HOME/.config/xsettingsd"
-  copy_config "$CLONE_DIR/.config/hypr" "$HOME/.config/hypr"
-  copy_config "$CLONE_DIR/.config/zathura" "$HOME/.config/zathura"
-  copy_config "$CLONE_DIR/.config/user-dirs.dirs" "$HOME/.config/user-dirs.dirs"
+  copy_config "$CLONE_DIR/themes" "$HOME/.themes"
+  copy_config "$CLONE_DIR/configs/.gtkrc-2.0" "$HOME/.gtkrc-2.0"
+  copy_config "$CLONE_DIR/configs/alacritty" "$HOME/.config/alacritty"
+  copy_config "$CLONE_DIR/configs/eww" "$HOME/.config/eww"
+  copy_config "$CLONE_DIR/configs/imv" "$HOME/.config/imv"
+  copy_config "$CLONE_DIR/configs/rofi" "$HOME/.config/rofi"
+  copy_config "$CLONE_DIR/configs/zathura" "$HOME/.config/zathura"
+  copy_config "$CLONE_DIR/configs/qt5ct" "$HOME/.config/qt5ct"
+  copy_config "$CLONE_DIR/configs/qt6ct" "$HOME/.config/qt6ct"
+  copy_config "$CLONE_DIR/configs/gtk-3.0" "$HOME/.config/gtk-3.0"
+  copy_config "$CLONE_DIR/configs/gtk-4.0" "$HOME/.config/gtk-4.0"
+  copy_config "$CLONE_DIR/configs/xsettingsd" "$HOME/.config/xsettingsd"
+  copy_config "$CLONE_DIR/configs/hypr" "$HOME/.config/hypr"
+  copy_config "$CLONE_DIR/configs/zathura" "$HOME/.config/zathura"
+  copy_config "$CLONE_DIR/configs/user-dirs.dirs" "$HOME/.config/user-dirs.dirs"
   run_cmd "gsettings set org.gnome.desktop.interface gtk-theme gruvbox"
 
   for DRIVER in $DRIVER_CHOICE; do
     if [[ "$DRIVER" == "nvidia" ]]; then
-      run_cmd "echo -e 'env= LIBVA_DRIVER_NAME,nvidia\nenv = __GLX_VENDOR_LIBRARY_NAME,nvidia\nenv = NVD_BACKEND,direct' | tee -a '$HOME/.config/hypr/hyprland.conf'"
+      echo -e 'env = LIBVA_DRIVER_NAME,nvidia\nenv = __GLX_VENDOR_LIBRARY_NAME,nvidia\nenv = NVD_BACKEND,direct' >> "$HOME/.config/hypr/hyprland.conf"
+      echo -e 'cursor {\nno_hardware_cursor = true\n}' >> "$HOME/.config/hypr/hyprland.conf"
+    elif [[ "$DRIVER" == "nvidia-opensource" ]]; then
+      echo -e 'cursor {\nno_hardware_cursor = true\n}' >> "$HOME/.config/hypr/hyprland.conf"
     fi
   done
 
@@ -185,7 +179,6 @@ if gum confirm "Do you want to setup graphical environment?"; then
   XDG_VIDEOS_DIR="$HOME/videos"
   for dir in "$XDG_DESKTOP_DIR" "$XDG_DOWNLOAD_DIR" "$XDG_TEMPLATES_DIR" "$XDG_PUBLICSHARE_DIR" "$XDG_DOCUMENTS_DIR" "$XDG_MUSIC_DIR" "$XDG_PICTURES_DIR" "$XDG_VIDEOS_DIR"; do
     if [ ! -d "$dir" ]; then
-      info "Creating $dir"
       mkdir -p "$dir"
     else
       warn "Directory $dir already exists"
@@ -200,15 +193,14 @@ if gum confirm "Do you want to setup graphical environment?"; then
   fi
 
   if gum confirm "Do you want to setup sound with MPD and NCMPCPP?"; then
-    info "Installing MPD and ncmpcpp"
+    info "Installing MPD and NCMPCPP"
     run_cmd ""$AUR_HELPER" -S --noconfirm --needed mpd ncmpcpp"
-    info "Creating MPD configuration directory"
     copy_config "$CLONE_DIR/.config/mpd" "$HOME/.config/mpd"
     copy_config "$CLONE_DIR/.config/ncmpcpp" "$HOME/.config/ncmpcpp"
   fi
 
   if gum confirm "Do you want to setup Bluetooth?"; then
-    info "Installing Bluetooth packages"
+    info "Installing Bluetooth"
     run_cmd ""$AUR_HELPER" -S --noconfirm --needed bluez bluez-utils bluetui"
     info "Enabling and starting Bluetooth service"
     run_cmd "sudo systemctl enable --now bluetooth"
@@ -216,7 +208,7 @@ if gum confirm "Do you want to setup graphical environment?"; then
 fi
 
 if gum confirm "Do you want to setup rust?"; then
-  info "Installing rustup using $AUR_HELPER"
+  info "Installing Rustup"
   run_cmd ""$AUR_HELPER" -S --noconfirm rustup"
 
   if gum confirm "Do you want to setup rust nightly?"; then
