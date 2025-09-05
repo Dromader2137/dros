@@ -38,7 +38,7 @@ run_cmd() {
 }
 
 info "Installing gum (for better interactive prompts), git and base-devel (for AUR packages)"
-run_cmd "sudo pacman -S --noconfirm --needed gum git base-devel >"
+run_cmd "sudo pacman -S --noconfirm --needed gum git base-devel"
 
 info "Adding Chaotic-AUR repository"
 run_cmd "sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com"
