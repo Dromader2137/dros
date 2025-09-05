@@ -143,7 +143,7 @@ if gum confirm "Do you want to setup graphical environment?"; then
   GRAPHICS_ENV="hypr"
 
   run_cmd "librewolf --headless & sleep 5; pkill librewolf"
-  LIBREWOLF_PROFILE_DIR=$(find "$HOME/.librewolf" -maxdepth 1 -type d -name "*.default*" | head -n 1)
+  LIBREWOLF_PROFILE_DIR=$(find "$HOME/.librewolf" -maxdepth 1 -type d -name "*.default-default" | head -n 1)
   if [ -d "$LIBREWOLF_PROFILE_DIR" ]; then
     copy_config "$CLONE_DIR/userChrome.css" "$LIBREWOLF_PROFILE_DIR/chrome/userChrome.css"
   else
