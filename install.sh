@@ -166,6 +166,7 @@ if gum confirm "Do you want to setup graphical environment?"; then
   copy_config "$CLONE_DIR/.config/hypr" "$HOME/.config/hypr"
   copy_config "$CLONE_DIR/.config/zathura" "$HOME/.config/zathura"
   copy_config "$CLONE_DIR/.config/user-dirs.dirs" "$HOME/.config/user-dirs.dirs"
+  run_cmd "gsettings set org.gnome.desktop.interface gtk-theme gruvbox"
 
   for DRIVER in $DRIVER_CHOICE; do
     if [[ "$DRIVER" == "nvidia" ]]; then
