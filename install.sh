@@ -130,7 +130,7 @@ if gum confirm "Do you want to setup graphical environment?"; then
   done
 
   info "Installing desktop packages"
-  run_cmd ""$AUR_HELPER" -S --noconfirm --needed qt5ct qt6ct hyprland alacritty eww jq socat imv rofi zathura librewolf slurp grim mpv ttf-mononoki-nerd nerd-fonts-symbols-mono nerd-fonts-symbols nerd-fonts-symbols-common noto-fonts-emoji hyprlock ttf-hanazono bibata-cursor-translucent"
+  run_cmd ""$AUR_HELPER" -S --noconfirm --needed qt5ct qt6ct hyprland alacritty eww jq socat imv rofi zathura librewolf slurp grim mpv ttf-mononoki-nerd nerd-fonts-symbols-mono nerd-fonts-symbols nerd-fonts-symbols-common noto-fonts-emoji hyprlock ttf-hanazono bibata-cursor-translucent xdg-desktop-portal-hyprland"
 
   GRAPHICS_ENV="hypr"
 
@@ -163,10 +163,10 @@ if gum confirm "Do you want to setup graphical environment?"; then
 
   for DRIVER in $DRIVER_CHOICE; do
     if [[ "$DRIVER" == "nvidia" ]]; then
-      echo -e 'env = LIBVA_DRIVER_NAME,nvidia\nenv = __GLX_VENDOR_LIBRARY_NAME,nvidia\nenv = NVD_BACKEND,direct' >> "$HOME/.config/hypr/hyprland.conf"
-      echo -e 'cursor {\nno_hardware_cursors = true\n}' >> "$HOME/.config/hypr/hyprland.conf"
+      echo -e '\nenv = LIBVA_DRIVER_NAME,nvidia\nenv = __GLX_VENDOR_LIBRARY_NAME,nvidia\nenv = NVD_BACKEND,direct' >> "$HOME/.config/hypr/hyprland.conf"
+      echo -e '\ncursor {\n  no_hardware_cursors = true\n}' >> "$HOME/.config/hypr/hyprland.conf"
     elif [[ "$DRIVER" == "nvidia-opensource" ]]; then
-      echo -e 'cursor {\nno_hardware_cursors = true\n}' >> "$HOME/.config/hypr/hyprland.conf"
+      echo -e '\ncursor {\n  no_hardware_cursors = true\n}' >> "$HOME/.config/hypr/hyprland.conf"
     fi
   done
 
