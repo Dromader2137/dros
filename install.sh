@@ -164,9 +164,9 @@ if gum confirm "Do you want to setup graphical environment?"; then
   for DRIVER in $DRIVER_CHOICE; do
     if [[ "$DRIVER" == "nvidia" ]]; then
       echo -e 'env = LIBVA_DRIVER_NAME,nvidia\nenv = __GLX_VENDOR_LIBRARY_NAME,nvidia\nenv = NVD_BACKEND,direct' >> "$HOME/.config/hypr/hyprland.conf"
-      echo -e 'cursor {\nno_hardware_cursor = true\n}' >> "$HOME/.config/hypr/hyprland.conf"
+      echo -e 'cursor {\nno_hardware_cursors = true\n}' >> "$HOME/.config/hypr/hyprland.conf"
     elif [[ "$DRIVER" == "nvidia-opensource" ]]; then
-      echo -e 'cursor {\nno_hardware_cursor = true\n}' >> "$HOME/.config/hypr/hyprland.conf"
+      echo -e 'cursor {\nno_hardware_cursors = true\n}' >> "$HOME/.config/hypr/hyprland.conf"
     fi
   done
 
