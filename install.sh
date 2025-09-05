@@ -223,5 +223,9 @@ if gum confirm "Do you want to setup rust?"; then
     info "Installing nightly toolchain"
     run_cmd "rustup install nightly"
     run_cmd "rustup default nightly"
+  else
+    info "Installing stable toolchain"
+    run_cmd "rustup install stable"
+    run_cmd "rustup default stable"
   fi
 fi
