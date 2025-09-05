@@ -141,7 +141,15 @@ if gum confirm "Do you want to setup graphical environment?"; then
   info "Installing desktop packages"
   run_cmd ""$AUR_HELPER" -S --noconfirm --needed qt5ct qt6ct hyprland alacritty eww imv rofi zathura librewolf zathura slurp grim mpv ttf-mononoki-nerd nerd-fonts-symbols-mono nerd-fonts-symbols nerd-fonts-symbols-common noto-fonts-emoji hyprlock ttf-hanazono"
   GRAPHICS_ENV="hypr"
-  copy_config "$CLONE_DIR/.librewolf/t07hmt5u.default-default/chrome" "$HOME/.librewolf/t07hmt5u.default-default/chrome"
+
+  run_cmd "librewolf --headless & sleep 5; pkill librewolf"
+  LIBREWOLF_PROFILE_DIR=$(find "$HOME/.librewolf" -maxdepth 1 -type d -name "*.default*" | head -n 1)
+  if [ -d "$LIBREWOLF_PROFILE_DIR" ]; then
+    copy_config "$CLONE_DIR/userChrome.css" "$LIBREWOLF_PROFILE_DIR/chrome/userChrome.css"
+  else
+    warn "LibreWolf profile not found, skipping chrome config"
+  fi
+
   copy_config "$CLONE_DIR/.themes" "$HOME/.themes"
   copy_config "$CLONE_DIR/.gtkrc-2.0" "$HOME/.gtkrc-2.0"
   copy_config "$CLONE_DIR/.config/alacritty" "$HOME/.config/alacritty"
