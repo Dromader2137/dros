@@ -22,18 +22,33 @@ copy_config() {
   fi
 }
 
+LOG_FILE="/tmp/arch-setup.log"
+
+run_cmd() {
+    local cmd="$*"
+    echo -e "\n Running: $cmd" >> "$LOG_FILE"
+
+    if ! eval "$cmd" >> "$LOG_FILE" 2>&1; then
+        error "Command failed: $cmd"
+        echo "---- Output from log ----"
+        tail -n 50 "$LOG_FILE"
+        echo "-------------------------"
+        exit 1
+    fi
+}
+
 info "Installing gum (for better interactive prompts), git and base-devel (for AUR packages)"
-sudo pacman -S --noconfirm --needed gum git base-devel
+run_cmd "sudo pacman -S --noconfirm --needed gum git base-devel >"
 
 info "Adding Chaotic-AUR repository"
-sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
-sudo pacman-key --lsign-key 3056513887B78AEB
-sudo pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
-sudo pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+run_cmd "sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com"
+run_cmd "sudo pacman-key --lsign-key 3056513887B78AEB"
+run_cmd "sudo pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'"
+run_cmd "sudo pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'"
 
 if ! grep -q "chaotic-aur" /etc/pacman.conf; then
     echo -e "\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist" | sudo tee -a /etc/pacman.conf
-    sudo pacman -Syu --noconfirm
+    run_cmd "sudo pacman -Syu --noconfirm"
 else
     warn "Chaotic-AUR is already present in pacman.conf"
 fi
@@ -42,21 +57,11 @@ info "Choose an AUR helper"
 AUR_HELPER=$(gum choose "yay" "paru" --cursor.foreground 212 --height 3)
 
 if [[ "$AUR_HELPER" == "yay" ]]; then
-    info "Installing yay from Chaotic-AUR or building from AUR"
-    if sudo pacman -Si yay &>/dev/null; then
-        sudo pacman -S --noconfirm yay
-    else
-        git clone https://aur.archlinux.org/yay.git /tmp/yay
-        (cd /tmp/yay && makepkg -si --noconfirm)
-    fi
+    info "Installing yay"
+    run_cmd "sudo pacman -S --noconfirm yay"
 elif [[ "$AUR_HELPER" == "paru" ]]; then
-    info "Installing paru from Chaotic-AUR or building from AUR"
-    if sudo pacman -Si paru &>/dev/null; then
-        sudo pacman -S --noconfirm paru
-    else
-        git clone https://aur.archlinux.org/paru.git /tmp/paru
-        (cd /tmp/paru && makepkg -si --noconfirm)
-    fi
+    info "Installing paru"
+    run_cmd "sudo pacman -S --noconfirm paru"
 else
     error "No AUR helper chosen, requiered!"
     exit 1;
@@ -64,31 +69,31 @@ fi
 
 if [ -d "$CLONE_DIR" ]; then
   warn "Config directory already exists at $CLONE_DIR, removing it."
-  rm -rf "$CLONE_DIR"
+  run_cmd "rm -rf "$CLONE_DIR""
 fi
 
 info "Cloning config repo from $CONFIG_REPO"
-git clone "$CONFIG_REPO" "$CLONE_DIR"
+run_cmd "git clone "$CONFIG_REPO" "$CLONE_DIR""
 
 if gum confirm "Do you want to setup fish?"; then
   info "Installing Fish shell"
-  "$aur_helper" -S --noconfirm --needed fish
+  run_cmd ""$AUR_HELPER" -S --noconfirm --needed fish"
   info "Installing eza (ls replacement with nice colors)"
-  "$aur_helper" -S --noconfirm --needed eza
+  run_cmd ""$AUR_HELPER" -S --noconfirm --needed eza"
   info "Setting Fish as default shell for the current user"
-  chsh -s /usr/bin/fish
+  run_cmd "chsh -s /usr/bin/fish"
   copy_config "$CLONE_DIR/.config/fish" "$HOME/.config/fish"
 
   if gum confirm "Do you want to install Starship prompt?"; then
     info "Installing Starship prompt"
-    "$aur_helper" -S --noconfirm --needed starship
+    run_cmd ""$AUR_HELPER" -S --noconfirm --needed starship"
     copy_config "$CLONE_DIR/.config/starship.toml" "$HOME/.config/starship.toml"
   fi
 fi
 
 if gum confirm "Do you want to setup nvim?"; then
   info "Installing Neovim"
-  "$aur_helper" -S --noconfirm --needed neovim
+  run_cmd ""$AUR_HELPER" -S --noconfirm --needed neovim"
   copy_config "$CLONE_DIR/.config/nvim" "$HOME/.config/nvim"
 fi
 
@@ -110,19 +115,19 @@ if gum confirm "Do you want to setup graphical environment?"; then
     case "$DRIVER" in
       intel)
         info "Installing Intel graphics drivers"
-        "$aur_helper" -S --noconfirm --needed mesa libva-intel-driver vulkan-intel libvpl vpl-gpu-rt
+        run_cmd ""$AUR_HELPER" -S --noconfirm --needed mesa libva-intel-driver vulkan-intel libvpl vpl-gpu-rt"
         ;;
       amd)
         info "Installing AMD graphics drivers"
-        "$aur_helper" -S --noconfirm --needed mesa vulkan-radeon
+        run_cmd ""$AUR_HELPER" -S --noconfirm --needed mesa vulkan-radeon"
         ;;
       nvidia)
         info "Installing NVIDIA proprietary drivers"
-        "$aur_helper" -S --noconfirm --needed nvidia-open nvidia-utils libva-nvidia-driver
+        run_cmd ""$AUR_HELPER" -S --noconfirm --needed nvidia-open nvidia-utils libva-nvidia-driver"
         ;;
       nvidia-opensource)
         info "Installing NVIDIA open-source driver"
-        "$aur_helper" -S --noconfirm --needed mesa vulkan-nouveau
+        run_cmd ""$AUR_HELPER" -S --noconfirm --needed mesa vulkan-nouveau"
         ;;
       none)
         warn "Skipping graphical driver installation"
@@ -134,7 +139,7 @@ if gum confirm "Do you want to setup graphical environment?"; then
   done
 
   info "Installing desktop packages"
-  "$aur_helper" -S --noconfirm --needed qt5ct qt6ct hyprland alacritty eww imv rofi zathura librewolf zathura slurp grim mpv
+  run_cmd ""$AUR_HELPER" -S --noconfirm --needed qt5ct qt6ct hyprland alacritty eww imv rofi zathura librewolf zathura slurp grim mpv"
   GRAPHICS_ENV="hypr"
   copy_config "$CLONE_DIR/.librewolf/t07hmt5u.default-default/chrome" "$HOME/.librewolf/t07hmt5u.default-default/chrome"
   copy_config "$CLONE_DIR/.themes" "$HOME/.themes"
@@ -171,15 +176,15 @@ if gum confirm "Do you want to setup graphical environment?"; then
 
   if gum confirm "Do you want to setup sound with Pipewire?"; then
     info "Installing Pipewire, Pipewire-Pulse, WirePlumber, and Pulsemixer"
-    "$aur_helper" -S --noconfirm --needed pipewire pipewire-pulse wireplumber
-    "$aur_helper" -S --noconfirm --needed pulsmixer
+    run_cmd ""$AUR_HELPER" -S --noconfirm --needed pipewire pipewire-pulse wireplumber"
+    run_cmd ""$AUR_HELPER" -S --noconfirm --needed pulsmixer"
     info "Enabling and starting Pipewire services"
-    systemctl --user enable --now pipewire pipewire-pulse wireplumber
+    run_cmd "systemctl --user enable --now pipewire pipewire-pulse wireplumber"
   fi
 
   if gum confirm "Do you want to setup sound with MPD and NCMPCPP?"; then
     info "Installing MPD and ncmpcpp"
-    "$aur_helper" -S --noconfirm --needed mpd ncmpcpp
+    run_cmd ""$AUR_HELPER" -S --noconfirm --needed mpd ncmpcpp"
     info "Creating MPD configuration directory"
     copy_config "$CLONE_DIR/.config/mpd" "$HOME/.config/mpd"
     copy_config "$CLONE_DIR/.config/ncmpcpp" "$HOME/.config/ncmpcpp"
@@ -187,21 +192,21 @@ if gum confirm "Do you want to setup graphical environment?"; then
 
   if gum confirm "Do you want to setup Bluetooth?"; then
     info "Installing Bluetooth packages"
-    "$aur_helper" -S --noconfirm --needed bluez bluez-utils
-    "$aur_helper" -S --noconfirm --needed bluetuith
+    run_cmd ""$AUR_HELPER" -S --noconfirm --needed bluez bluez-utils"
+    run_cmd ""$AUR_HELPER" -S --noconfirm --needed bluetuith"
     info "Enabling and starting Bluetooth service"
-    sudo systemctl enable --now bluetooth
+    run_cmd "sudo systemctl enable --now bluetooth"
   fi
 fi
 
 
 if gum confirm "Do you want to setup rust?"; then
-  info "Installing rustup using $aur_helper"
-  "$aur_helper" -S --noconfirm rustup
+  info "Installing rustup using $AUR_HELPER"
+  run_cmd ""$AUR_HELPER" -S --noconfirm rustup"
 
   if gum confirm "Do you want to setup rust nightly?"; then
     info "Installing nightly toolchain"
-    rustup install nightly
-    rustup default nightly
+    run_cmd "rustup install nightly"
+    run_cmd "rustup default nightly"
   fi
 fi
