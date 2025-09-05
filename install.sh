@@ -47,7 +47,7 @@ run_cmd "sudo pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/c
 run_cmd "sudo pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'"
 
 if ! grep -q "chaotic-aur" /etc/pacman.conf; then
-    run_cmd "echo -e "\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist" | sudo tee -a /etc/pacman.conf"
+    run_cmd "echo -e '\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' | sudo tee -a /etc/pacman.conf"
     run_cmd "sudo pacman -Syu --noconfirm"
 else
     warn "Chaotic-AUR is already present in pacman.conf"
@@ -139,7 +139,7 @@ if gum confirm "Do you want to setup graphical environment?"; then
   done
 
   info "Installing desktop packages"
-  run_cmd ""$AUR_HELPER" -S --noconfirm --needed qt5ct qt6ct hyprland alacritty eww imv rofi zathura librewolf zathura slurp grim mpv"
+  run_cmd ""$AUR_HELPER" -S --noconfirm --needed qt5ct qt6ct hyprland alacritty eww imv rofi zathura librewolf zathura slurp grim mpv ttf-mononoki-nerd nerd-fonts-symbols-mono nerd-fonts-symbols nerd-fonts-symbols-common noto-fonts-emoji"
   GRAPHICS_ENV="hypr"
   copy_config "$CLONE_DIR/.librewolf/t07hmt5u.default-default/chrome" "$HOME/.librewolf/t07hmt5u.default-default/chrome"
   copy_config "$CLONE_DIR/.themes" "$HOME/.themes"
