@@ -26,16 +26,16 @@ copy_config() {
 
 LOG_FILE="/tmp/arch-setup.log"
 run_cmd() {
-    local cmd="$*"
-    echo -e "\n Running: $cmd" >> "$LOG_FILE"
+  local cmd="$*"
+  echo -e "\n Running: $cmd" >> "$LOG_FILE"
 
-    if ! eval "$cmd" >> "$LOG_FILE" 2>&1; then
-        error "Command failed: $cmd"
-        echo "---- Output from log ----"
-        tail -n 50 "$LOG_FILE"
-        echo "-------------------------"
-        exit 1
-    fi
+  if ! eval "$cmd" >> "$LOG_FILE" 2>&1; then
+    error "Command failed: $cmd"
+    echo "---- Output from log ----"
+    tail -n 50 "$LOG_FILE"
+    echo "-------------------------"
+    exit 1
+  fi
 }
 
 info "Installing gum (for better interactive prompts), git and base-devel (for AUR packages)"
@@ -47,23 +47,23 @@ run_cmd "sudo pacman-key --lsign-key 3056513887B78AEB"
 run_cmd "sudo pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'"
 run_cmd "sudo pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'"
 if ! grep -q "chaotic-aur" /etc/pacman.conf; then
-    run_cmd "echo -e '\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' | sudo tee -a /etc/pacman.conf"
-    run_cmd "sudo pacman -Syu --noconfirm"
+  run_cmd "echo -e '\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' | sudo tee -a /etc/pacman.conf"
+  run_cmd "sudo pacman -Syu --noconfirm"
 else
-    warn "Chaotic-AUR is already present in pacman.conf"
+  warn "Chaotic-AUR is already present in pacman.conf"
 fi
 
 info "Choose an AUR helper"
 AUR_HELPER=$(gum choose "yay" "paru" --cursor.foreground 212 --height 2)
 if [[ "$AUR_HELPER" == "yay" ]]; then
-    info "Installing yay"
-    run_cmd "sudo pacman -S --noconfirm yay"
+  info "Installing yay"
+  run_cmd "sudo pacman -S --noconfirm yay"
 elif [[ "$AUR_HELPER" == "paru" ]]; then
-    info "Installing paru"
-    run_cmd "sudo pacman -S --noconfirm paru"
+  info "Installing paru"
+  run_cmd "sudo pacman -S --noconfirm paru"
 else
-    error "No AUR helper chosen, requiered!"
-    exit 1;
+  error "No AUR helper chosen, requiered!"
+  exit 1;
 fi
 
 if [ -d "$CLONE_DIR" ]; then
@@ -222,4 +222,8 @@ if gum confirm "Do you want to setup rust?"; then
     run_cmd "rustup install stable"
     run_cmd "rustup default stable"
   fi
+fi
+
+if gum confirm "Do you want to install additional recommended utilities?"; then
+  run_cmd ""$AUR_HELPER" -S --noconfirm --needed zip unzip tar sqlite ripgrep fzf"
 fi
