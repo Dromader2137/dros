@@ -160,6 +160,9 @@ if gum confirm "Do you want to setup graphical environment?"; then
   copy_config "$CLONE_DIR/configs/zathura" "$HOME/.config/zathura"
   copy_config "$CLONE_DIR/configs/user-dirs.dirs" "$HOME/.config/user-dirs.dirs"
   run_cmd "gsettings set org.gnome.desktop.interface gtk-theme gruvbox"
+  run_cmd "gsettings set org.gnome.desktop.interface font-name 'Mononoki Nerd Font 12'"
+  run_cmd "gsettings set org.gnome.desktop.interface monospace-font-name 'Mononoki Nerd Font Mono 12'"
+  run_cmd "gsettings set org.gnome.desktop.interface document-font-name 'Mononoki Nerd Font 12'"
 
   for DRIVER in $DRIVER_CHOICE; do
     if [[ "$DRIVER" == "nvidia" ]]; then
