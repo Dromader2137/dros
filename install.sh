@@ -47,7 +47,7 @@ run_cmd "sudo pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/c
 run_cmd "sudo pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'"
 
 if ! grep -q "chaotic-aur" /etc/pacman.conf; then
-    echo -e "\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist" | sudo tee -a /etc/pacman.conf
+    run_cmd "echo -e "\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist" | sudo tee -a /etc/pacman.conf"
     run_cmd "sudo pacman -Syu --noconfirm"
 else
     warn "Chaotic-AUR is already present in pacman.conf"
@@ -81,7 +81,7 @@ if gum confirm "Do you want to setup fish?"; then
   info "Installing eza (ls replacement with nice colors)"
   run_cmd ""$AUR_HELPER" -S --noconfirm --needed eza"
   info "Setting Fish as default shell for the current user"
-  run_cmd "chsh -s /usr/bin/fish"
+  run_cmd "sudo chsh -s /usr/bin/fish "$USER""
   copy_config "$CLONE_DIR/.config/fish" "$HOME/.config/fish"
 
   if gum confirm "Do you want to install Starship prompt?"; then
@@ -173,7 +173,6 @@ if gum confirm "Do you want to setup graphical environment?"; then
     fi
   done
 
-
   if gum confirm "Do you want to setup sound with Pipewire?"; then
     info "Installing Pipewire, Pipewire-Pulse, WirePlumber, and Pulsemixer"
     run_cmd ""$AUR_HELPER" -S --noconfirm --needed pipewire pipewire-pulse wireplumber pulsemixer"
@@ -196,7 +195,6 @@ if gum confirm "Do you want to setup graphical environment?"; then
     run_cmd "sudo systemctl enable --now bluetooth"
   fi
 fi
-
 
 if gum confirm "Do you want to setup rust?"; then
   info "Installing rustup using $AUR_HELPER"
