@@ -25,25 +25,42 @@ copy_config() {
 info "Installing gum (for better interactive prompts), git and base-devel (for AUR packages)"
 sudo pacman -S --noconfirm --needed gum git base-devel
 
-echo "Which AUR helper would you like to install? (yay/paru)"
-read -rp "Enter choice: " aur_helper
+info "Adding Chaotic-AUR repository"
+sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+sudo pacman-key --lsign-key 3056513887B78AEB
+sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
+sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
 
-case "$aur_helper" in
-  yay)
-    info "Installing yay..."
-    git clone https://aur.archlinux.org/yay.git /tmp/yay
-    (cd /tmp/yay && makepkg -si --noconfirm)
-    ;;
-  paru)
-    info "Installing paru..."
-    git clone https://aur.archlinux.org/paru.git /tmp/paru
-    (cd /tmp/paru && makepkg -si --noconfirm)
-    ;;
-  *)
-    warn "Invalid choice, AUR is requiered."
+if ! grep -q "chaotic-aur" /etc/pacman.conf; then
+    echo -e "\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist" | sudo tee -a /etc/pacman.conf
+    sudo pacman -Syu --noconfirm
+else
+    warn "Chaotic-AUR is already present in pacman.conf"
+fi
+
+info "Choose an AUR helper"
+AUR_HELPER=$(gum choose "yay" "paru" --cursor.foreground 212 --height 3)
+
+if [[ "$AUR_HELPER" == "yay" ]]; then
+    info "Installing yay from Chaotic-AUR or building from AUR"
+    if sudo pacman -Si yay &>/dev/null; then
+        sudo pacman -S --noconfirm yay
+    else
+        git clone https://aur.archlinux.org/yay.git /tmp/yay
+        (cd /tmp/yay && makepkg -si --noconfirm)
+    fi
+elif [[ "$AUR_HELPER" == "paru" ]]; then
+    info "Installing paru from Chaotic-AUR or building from AUR"
+    if sudo pacman -Si paru &>/dev/null; then
+        sudo pacman -S --noconfirm paru
+    else
+        git clone https://aur.archlinux.org/paru.git /tmp/paru
+        (cd /tmp/paru && makepkg -si --noconfirm)
+    fi
+else
+    error "No AUR helper chosen, requiered!"
     exit 1;
-    ;;
-esac
+fi
 
 if [ -d "$CLONE_DIR" ]; then
   warn "Config directory already exists at $CLONE_DIR, removing it."
@@ -117,7 +134,7 @@ if gum confirm "Do you want to setup graphical environment?"; then
   done
 
   info "Installing desktop packages"
-  "$aur_helper" -S --noconfirm --needed qt5ct qt6ct hyprland alacritty eww imv rofi zathura librewolf-bin zathura slurp grim mpv
+  "$aur_helper" -S --noconfirm --needed qt5ct qt6ct hyprland alacritty eww imv rofi zathura librewolf zathura slurp grim mpv
   GRAPHICS_ENV="hypr"
   copy_config "$CLONE_DIR/.librewolf/t07hmt5u.default-default/chrome" "$HOME/.librewolf/t07hmt5u.default-default/chrome"
   copy_config "$CLONE_DIR/.themes" "$HOME/.themes"
