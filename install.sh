@@ -9,6 +9,8 @@ function info() { echo -e "\e[32m[INFO]\e[0m $1"; }
 function warn() { echo -e "\e[33m[WARN]\e[0m $1"; }
 function error() { echo -e "\e[31m[ERROR]\e[0m $1"; }
 
+info "You must have sudo privilages on the system!"
+
 copy_config() {
   local src="$1"
   local dest="$2"
