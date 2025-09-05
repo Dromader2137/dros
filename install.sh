@@ -176,8 +176,7 @@ if gum confirm "Do you want to setup graphical environment?"; then
 
   if gum confirm "Do you want to setup sound with Pipewire?"; then
     info "Installing Pipewire, Pipewire-Pulse, WirePlumber, and Pulsemixer"
-    run_cmd ""$AUR_HELPER" -S --noconfirm --needed pipewire pipewire-pulse wireplumber"
-    run_cmd ""$AUR_HELPER" -S --noconfirm --needed pulsmixer"
+    run_cmd ""$AUR_HELPER" -S --noconfirm --needed pipewire pipewire-pulse wireplumber pulsemixer"
     info "Enabling and starting Pipewire services"
     run_cmd "systemctl --user enable --now pipewire pipewire-pulse wireplumber"
   fi
@@ -192,8 +191,7 @@ if gum confirm "Do you want to setup graphical environment?"; then
 
   if gum confirm "Do you want to setup Bluetooth?"; then
     info "Installing Bluetooth packages"
-    run_cmd ""$AUR_HELPER" -S --noconfirm --needed bluez bluez-utils"
-    run_cmd ""$AUR_HELPER" -S --noconfirm --needed bluetuith"
+    run_cmd ""$AUR_HELPER" -S --noconfirm --needed bluez bluez-utils bluetui"
     info "Enabling and starting Bluetooth service"
     run_cmd "sudo systemctl enable --now bluetooth"
   fi
