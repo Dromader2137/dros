@@ -80,7 +80,7 @@ if gum confirm "Do you want to setup fish?"; then
   run_cmd ""$AUR_HELPER" -S --noconfirm --needed eza"
   info "Setting Fish as the default shell"
   run_cmd "sudo chsh -s /usr/bin/fish "$USER""
-  copy_config "$CLONE_DIR/.config/fish" "$HOME/.config/fish"
+  copy_config "$CLONE_DIR/configs/fish" "$HOME/.config/fish"
 
   if gum confirm "Do you want to install Starship prompt?"; then
     info "Installing Starship"
