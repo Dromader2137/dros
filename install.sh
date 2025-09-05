@@ -53,10 +53,11 @@ fi
 info "Cloning config repo from $CONFIG_REPO"
 git clone "$CONFIG_REPO" "$CLONE_DIR"
 
-
 if gum confirm "Do you want to setup fish?"; then
   info "Installing Fish shell"
   "$aur_helper" -S --noconfirm --needed fish
+  info "Installing eza (ls replacement with nice colors)"
+  "$aur_helper" -S --noconfirm --needed eza
   info "Setting Fish as default shell for the current user"
   chsh -s /usr/bin/fish
   copy_config "$CLONE_DIR/.config/fish" "$HOME/.config/fish"
