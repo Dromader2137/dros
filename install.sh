@@ -161,6 +161,8 @@ if gum confirm "Do you want to setup graphical environment?"; then
   copy_config "$CLONE_DIR/.config/qt5ct" "$HOME/.config/qt5ct"
   copy_config "$CLONE_DIR/.config/qt6ct" "$HOME/.config/qt6ct"
   copy_config "$CLONE_DIR/.config/gtk-3.0" "$HOME/.config/gtk-3.0"
+  copy_config "$CLONE_DIR/.config/gtk-4.0" "$HOME/.config/gtk-4.0"
+  copy_config "$CLONE_DIR/.config/xsettingsd" "$HOME/.config/xsettingsd"
   copy_config "$CLONE_DIR/.config/hypr" "$HOME/.config/hypr"
   copy_config "$CLONE_DIR/.config/zathura" "$HOME/.config/zathura"
   copy_config "$CLONE_DIR/.config/user-dirs.dirs" "$HOME/.config/user-dirs.dirs"
