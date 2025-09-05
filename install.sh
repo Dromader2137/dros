@@ -155,6 +155,12 @@ if gum confirm "Do you want to setup graphical environment?"; then
   copy_config "$CLONE_DIR/.config/zathura" "$HOME/.config/zathura"
   copy_config "$CLONE_DIR/.config/user-dirs.dirs" "$HOME/.config/user-dirs.dirs"
 
+  for DRIVER in $DRIVER_CHOICE; do
+    if [[ "$DRIVER" == "nvidia" ]]; then
+      run_cmd "echo -e 'env= LIBVA_DRIVER_NAME,nvidia\nenv = __GLX_VENDOR_LIBRARY_NAME,nvidia\nenv = NVD_BACKEND,direct' | tee -a '$HOME/.config/hypr/hyprland.conf'"
+    fi
+  done
+
   info "Creating XDG user directories"
   XDG_DESKTOP_DIR="$HOME/desktop"
   XDG_DOWNLOAD_DIR="$HOME/downloads"
