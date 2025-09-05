@@ -130,7 +130,7 @@ if gum confirm "Do you want to setup graphical environment?"; then
   done
 
   info "Installing desktop packages"
-  run_cmd ""$AUR_HELPER" -S --noconfirm --needed qt5ct qt6ct hyprland alacritty eww jq socat imv rofi zathura librewolf slurp grim mpv ttf-mononoki-nerd nerd-fonts-symbols-mono nerd-fonts-symbols nerd-fonts-symbols-common noto-fonts-emoji hyprlock ttf-hanazono bibata-cursor-translucent xdg-desktop-portal-hyprland"
+  run_cmd ""$AUR_HELPER" -S --noconfirm --needed qt5ct qt6ct hyprland alacritty eww calibre jq socat imv rofi zathura zathura-pdf-mupdf librewolf slurp grim mpv ttf-mononoki-nerd nerd-fonts-symbols-mono nerd-fonts-symbols nerd-fonts-symbols-common noto-fonts-emoji hyprlock ttf-hanazono bibata-cursor-translucent xdg-desktop-portal-hyprland"
 
   GRAPHICS_ENV="hypr"
 
