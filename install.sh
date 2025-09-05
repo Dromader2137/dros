@@ -92,19 +92,19 @@ if gum confirm "Do you want to setup graphical environment?"; then
   for DRIVER in $DRIVER_CHOICE; do
     case "$DRIVER" in
       intel)
-        info "Installing Intel graphics drivers and VA-API acceleration"
+        info "Installing Intel graphics drivers"
         "$aur_helper" -S --noconfirm --needed mesa libva-intel-driver vulkan-intel libvpl vpl-gpu-rt
         ;;
       amd)
-        info "Installing AMD graphics drivers and video acceleration"
+        info "Installing AMD graphics drivers"
         "$aur_helper" -S --noconfirm --needed mesa vulkan-radeon
         ;;
       nvidia)
-        info "Installing NVIDIA proprietary drivers and video acceleration"
+        info "Installing NVIDIA proprietary drivers"
         "$aur_helper" -S --noconfirm --needed nvidia-open nvidia-utils libva-nvidia-driver
         ;;
       nvidia-opensource)
-        info "Installing NVIDIA open-source Vulkan driver (NVK)"
+        info "Installing NVIDIA open-source driver"
         "$aur_helper" -S --noconfirm --needed mesa vulkan-nouveau
         ;;
       none)
@@ -165,6 +165,7 @@ if gum confirm "Do you want to setup graphical environment?"; then
     "$aur_helper" -S --noconfirm --needed mpd ncmpcpp
     info "Creating MPD configuration directory"
     copy_config "$CLONE_DIR/.config/mpd" "$HOME/.config/mpd"
+    copy_config "$CLONE_DIR/.config/ncmpcpp" "$HOME/.config/ncmpcpp"
   fi
 
   if gum confirm "Do you want to setup Bluetooth?"; then
