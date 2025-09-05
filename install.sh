@@ -22,8 +22,8 @@ copy_config() {
   fi
 }
 
-info "Installing gum (for better interactive prompts)"
-sudo pacman -S --noconfirm --needed gum
+info "Installing gum (for better interactive prompts) and git"
+sudo pacman -S --noconfirm --needed gum git
 
 echo "Which AUR helper would you like to install? (yay/paru)"
 read -rp "Enter choice: " aur_helper
