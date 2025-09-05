@@ -1,5 +1,5 @@
 configuration {
-    modes: [drun,ssh,calc];
+    modes: [drun,ssh];
     show-icons: false;
     drun-display-format: "{name}";
 }
