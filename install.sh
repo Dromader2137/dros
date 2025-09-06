@@ -43,7 +43,7 @@ run_cmd "sudo pacman -S --noconfirm --needed gum git base-devel"
 
 
 info "Adding Multilib repository"
-if ! grep -q "^\[multilib\]" /etc/pacman.conf; then
+if ! grep "^\[multilib\]" /etc/pacman.conf; then
   run_cmd "echo -e '\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' | sudo tee -a /etc/pacman.conf"
   run_cmd "sudo pacman -Syu --noconfirm
 else
