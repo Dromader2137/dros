@@ -172,7 +172,6 @@ if gum confirm "Do you want to setup graphical environment?"; then
   run_cmd "gsettings set org.gnome.desktop.interface font-name 'Mononoki Nerd Font 12'"
   run_cmd "gsettings set org.gnome.desktop.interface monospace-font-name 'Mononoki Nerd Font Mono 12'"
   run_cmd "gsettings set org.gnome.desktop.interface document-font-name 'Mononoki Nerd Font Mono 12'"
-  run_cmd "gsettings set org.gnome.desktop.interface titlebar-font 'Mononoki Nerd Font Mono 12'"
   run_cmd "gsettings set org.gnome.desktop.interface cursor-theme 'Bibata_Spirit'"
   run_cmd "gsettings set org.gnome.desktop.interface cursor-size 28"
 
