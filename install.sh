@@ -41,9 +41,14 @@ run_cmd() {
 info "Installing gum (for better interactive prompts), git and base-devel (for AUR packages)"
 run_cmd "sudo pacman -S --noconfirm --needed gum git base-devel"
 
+
 info "Adding Multilib repository"
-run_cmd "echo -e '\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' | sudo tee -a /etc/pacman.conf"
-run_cmd "sudo pacman -Syu --noconfirm"
+if ! grep -q "multilib" /etc/pacman.conf; then
+  run_cmd "echo -e '\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' | sudo tee -a /etc/pacman.conf"
+  run_cmd "sudo pacman -Syu --noconfirm
+else
+  warn "Multilib is already present in pacman.conf"
+fi
 
 info "Adding Chaotic-AUR repository"
 run_cmd "sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com"
