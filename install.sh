@@ -181,12 +181,12 @@ if gum confirm "Do you want to setup graphical environment?"; then
       echo -e '\ncursor {\n  no_hardware_cursors = true\n}' >> "$HOME/.config/hypr/hyprland.conf"
       run_cmd "sudo cp /etc/mkinitcpio.conf /etc/mkinitcpio.conf.bak"
       run_cmd "sudo sed -i 's|^MODULES=.*|MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)|' '/etc/mkinitcpio.conf'"
-      run_cmd "sudo mkinitpcio -P"
+      run_cmd "sudo mkinitcpio -P"
     elif [[ "$DRIVER" == "nvidia-opensource" ]]; then
       echo -e '\ncursor {\n  no_hardware_cursors = true\n}' >> "$HOME/.config/hypr/hyprland.conf"
       run_cmd "sudo cp /etc/mkinitcpio.conf /etc/mkinitcpio.conf.bak"
       run_cmd "sudo sed -i 's|^MODULES=.*|MODULES=(nouveau)|' '/etc/mkinitcpio.conf'"
-      run_cmd "sudo mkinitpcio -P"
+      run_cmd "sudo mkinitcpio -P"
     fi
   done
 
