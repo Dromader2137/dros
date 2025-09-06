@@ -41,6 +41,10 @@ run_cmd() {
 info "Installing gum (for better interactive prompts), git and base-devel (for AUR packages)"
 run_cmd "sudo pacman -S --noconfirm --needed gum git base-devel"
 
+info "Adding Multilib repository"
+run_cmd "echo -e '\n[multilib-aur]\nInclude = /etc/pacman.d/mirrorlist' | sudo tee -a /etc/pacman.conf"
+run_cmd "sudo pacman -Syu --noconfirm"
+
 info "Adding Chaotic-AUR repository"
 run_cmd "sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com"
 run_cmd "sudo pacman-key --lsign-key 3056513887B78AEB"
@@ -106,19 +110,19 @@ if gum confirm "Do you want to setup graphical environment?"; then
     case "$DRIVER" in
       intel)
         info "Installing Intel graphics drivers"
-        run_cmd ""$AUR_HELPER" -S --noconfirm --needed mesa libva-intel-driver vulkan-intel libvpl vpl-gpu-rt"
+        run_cmd ""$AUR_HELPER" -S --noconfirm --needed mesa libva-intel-driver vulkan-intel lib32-vulkan-intel libvpl vpl-gpu-rt"
         ;;
       amd)
         info "Installing AMD graphics drivers"
-        run_cmd ""$AUR_HELPER" -S --noconfirm --needed mesa vulkan-radeon"
+        run_cmd ""$AUR_HELPER" -S --noconfirm --needed mesa vulkan-radeon lib32-vulkan-radeon"
         ;;
       nvidia)
         info "Installing NVIDIA proprietary drivers"
-        run_cmd ""$AUR_HELPER" -S --noconfirm --needed nvidia-open nvidia-utils libva-nvidia-driver"
+        run_cmd ""$AUR_HELPER" -S --noconfirm --needed nvidia-open nvidia-utils lib32-nvidia-utils libva-nvidia-driver"
         ;;
       nvidia-opensource)
         info "Installing NVIDIA open-source drivers"
-        run_cmd ""$AUR_HELPER" -S --noconfirm --needed mesa vulkan-nouveau"
+        run_cmd ""$AUR_HELPER" -S --noconfirm --needed mesa vulkan-nouveau lib32-vulkan-nouveau"
         ;;
       none)
         warn "Skipping graphical driver installation"
@@ -162,14 +166,23 @@ if gum confirm "Do you want to setup graphical environment?"; then
   run_cmd "gsettings set org.gnome.desktop.interface gtk-theme gruvbox"
   run_cmd "gsettings set org.gnome.desktop.interface font-name 'Mononoki Nerd Font 12'"
   run_cmd "gsettings set org.gnome.desktop.interface monospace-font-name 'Mononoki Nerd Font Mono 12'"
-  run_cmd "gsettings set org.gnome.desktop.interface document-font-name 'Mononoki Nerd Font 12'"
+  run_cmd "gsettings set org.gnome.desktop.interface document-font-name 'Mononoki Nerd Font Mono 12'"
+  run_cmd "gsettings set org.gnome.desktop.interface titlebar-font 'Mononoki Nerd Font Mono 12'"
+  run_cmd "gsettings set org.gnome.desktop.interface cursor-theme 'Bibata_Spirit'"
+  run_cmd "gsettings set org.gnome.desktop.interface cursor-size 28"
 
   for DRIVER in $DRIVER_CHOICE; do
     if [[ "$DRIVER" == "nvidia" ]]; then
       echo -e '\nenv = LIBVA_DRIVER_NAME,nvidia\nenv = __GLX_VENDOR_LIBRARY_NAME,nvidia\nenv = NVD_BACKEND,direct' >> "$HOME/.config/hypr/hyprland.conf"
       echo -e '\ncursor {\n  no_hardware_cursors = true\n}' >> "$HOME/.config/hypr/hyprland.conf"
+      run_cmd "sudo cp /etc/mkinitcpio.conf /etc/mkinitcpio.conf.bak"
+      run_cmd "sudo sed -i 's|^MODULES=.*|MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)|' '/etc/mkinitcpio.conf'"
+      run_cmf "sudo mkinitpcio -P"
     elif [[ "$DRIVER" == "nvidia-opensource" ]]; then
       echo -e '\ncursor {\n  no_hardware_cursors = true\n}' >> "$HOME/.config/hypr/hyprland.conf"
+      run_cmd "sudo cp /etc/mkinitcpio.conf /etc/mkinitcpio.conf.bak"
+      run_cmd "sudo sed -i 's|^MODULES=.*|MODULES=(nouveau)|' '/etc/mkinitcpio.conf'"
+      run_cmd "sudo mkinitpcio -P"
     fi
   done
 
@@ -228,5 +241,5 @@ if gum confirm "Do you want to setup rust?"; then
 fi
 
 if gum confirm "Do you want to install additional recommended utilities?"; then
-  run_cmd ""$AUR_HELPER" -S --noconfirm --needed zip unzip tar sqlite ripgrep fzf"
+  run_cmd ""$AUR_HELPER" -S --noconfirm --needed zip unzip tar sqlite ripgrep fzf openssh"
 fi
