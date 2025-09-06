@@ -45,7 +45,7 @@ run_cmd "sudo pacman -S --noconfirm --needed gum git base-devel"
 info "Adding Multilib repository"
 if ! grep "^\[multilib\]" /etc/pacman.conf; then
   run_cmd "echo -e '\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' | sudo tee -a /etc/pacman.conf"
-  run_cmd "sudo pacman -Syu --noconfirm
+  run_cmd "sudo pacman -Syu --noconfirm" 
 else
   warn "Multilib is already present in pacman.conf"
 fi
