@@ -42,7 +42,7 @@ info "Installing gum (for better interactive prompts), git and base-devel (for A
 run_cmd "sudo pacman -S --noconfirm --needed gum git base-devel"
 
 info "Adding Multilib repository"
-run_cmd "echo -e '\n[multilib-aur]\nInclude = /etc/pacman.d/mirrorlist' | sudo tee -a /etc/pacman.conf"
+run_cmd "echo -e '\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' | sudo tee -a /etc/pacman.conf"
 run_cmd "sudo pacman -Syu --noconfirm"
 
 info "Adding Chaotic-AUR repository"
