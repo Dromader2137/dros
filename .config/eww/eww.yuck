@@ -6,7 +6,7 @@
 
 (defwidget rightstuff []
   (box :class "rightstuff" :orientation "h" :space-evenly false :spacing 20 :halign "end"
-    (systray :icon-size 18 :spacing 10 :prepend-new true :space-evenly true :orientation "h")
+    (systray  :class "systray" :icon-size 18 :spacing 10 :prepend-new true :space-evenly true :orientation "h")
     (box "  ${round(EWW_RAM.used_mem_perc, 0)}%")
     (box "  ${round(EWW_CPU.avg, 0)}%")
     (box "󱐋 ${round(EWW_BATTERY.BAT0.capacity, 0)}%")

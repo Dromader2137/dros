@@ -17,20 +17,7 @@ return {
         ensure_installed = { "lua_ls", "clangd", "rust_analyzer" },
         automatic_installation = true,
       })
-
-      require('lspconfig').rust_analyzer.setup({
-        settings = {
-          ["rust-analyzer"] = {
-            cargo = {
-              loadOutDirsFromCheck = true,
-            },
-            procMacro = {
-              enable = true,
-            },
-          }
-        }
-      })
-    end,
+    end
   },
 
   {

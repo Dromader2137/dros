@@ -1,3 +1,7 @@
+if status is-login
+	# start-hyprland
+end
+
 if status is-interactive
     starship init fish | source
     set fish_greeting
@@ -36,4 +40,5 @@ if status is-interactive
 
     contains $HOME/.cargo/bin/ $fish_user_paths; or set -Ua fish_user_paths $HOME/.cargo/bin/
     contains $HOME/.local/bin/ $fish_user_paths; or set -Ua fish_user_paths $HOME/.local/bin/
+    contains $HOME/.nsight/nsys/bin/ $fish_user_paths; or set -Ua fish_user_paths $HOME/.nsight/nsys/bin/
 end

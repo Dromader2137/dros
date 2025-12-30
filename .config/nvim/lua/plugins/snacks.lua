@@ -16,10 +16,6 @@ return {
     dashboard = {
       enabled = true,
     },
-    terminal = {
-      enabled = true,
-      win = { position = "float" } 
-    },
     explorer = {
       enabled = true,
     },
@@ -27,10 +23,8 @@ return {
   keys = {
     { "<leader>ff", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
     { "<leader>fg", function() Snacks.picker.grep() end, desc = "Grep" },
-    { "<leader>fu", function() Snacks.picker.undo() end, desc = "Undo History" },
+    { "<leader>fe", function() Snacks.explorer() end, desc = "File Explorer" },
     { "<leader>cd", function() Snacks.picker.diagnostics_buffer() end, desc = "Diagnostics Buffer" },
     { "<leader>cD", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
-    { "<leader>fe", function() Snacks.explorer() end, desc = "File Explorer" },
-    { "<leader>t", function() Snacks.terminal.toggle() end, desc = "Toggle Terminal" },
   }
 }
