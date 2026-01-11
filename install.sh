@@ -76,6 +76,7 @@ fi
 
 info "Cloning config repo from $CONFIG_REPO"
 run_cmd "git clone "$CONFIG_REPO" .dotfiles"
+
 cd .dotfiles
 
 if gum confirm "Do you want to setup fish?"; then
@@ -184,11 +185,6 @@ if gum confirm "Do you want to setup graphical environment?"; then
 		fi
 	done
 
-	run_cmd "mkdir -p $HOME/.config/hypr/hyprland"
-	run_cmd "touch $HOME/.config/hypr/hyprland/local_env.conf"
-	run_cmd "touch $HOME/.config/hypr/hyprland/monitors.conf"
-	run_cmd "touch $HOME/.config/hypr/hyprland/rules.conf"
-
 
 	if gum confirm "Do you want to setup sound with Pipewire?"; then
 		info "Installing Pipewire, Pipewire-Pulse, WirePlumber, and Pulsemixer"
@@ -228,6 +224,11 @@ fi
 if gum confirm "Do you want to install additional recommended utilities?"; then
 	run_cmd ""$AUR_HELPER" -S --noconfirm --needed zip unzip tar sqlite ripgrep fzf openssh"
 fi
+
+run_cmd "mkdir -p $HOME/.config/hypr/hyprland"
+run_cmd "touch $HOME/.config/hypr/hyprland/local_env.conf"
+run_cmd "touch $HOME/.config/hypr/hyprland/monitors.conf"
+run_cmd "touch $HOME/.config/hypr/hyprland/rules.conf"
 
 run_cmd "stow ."
 

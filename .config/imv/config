@@ -1,7 +1,5 @@
 [options]
 background = 282828
 overlay = false
-overlay_background_color = 282828
-overlay_background_alpha = ff
-overlay_text_color = ebdbb2
-overlay_font = Mononoki Nerd Font:12
+upscaling_method=nearest_neighbour
+overlay_font = Mononoki Nerd Font:14
