@@ -230,5 +230,8 @@ run_cmd "touch $HOME/.config/hypr/hyprland/local_env.conf"
 run_cmd "touch $HOME/.config/hypr/hyprland/monitors.conf"
 run_cmd "touch $HOME/.config/hypr/hyprland/rules.conf"
 
+cd "$HOME/.config"
+
+run_cmd "mkdir -P alacritty btop eww fish imv mpd ncmpcpp nvim qt5ct qt6ct rofi xsettingsd zathura gtk-3.0 gtk-4.0"
 run_cmd "stow ."
 
