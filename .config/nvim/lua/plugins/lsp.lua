@@ -20,11 +20,6 @@ return {
 		end
 	},
 	{
-		"williamboman/mason.nvim",
-		build = ":MasonUpdate",
-		opts = {}
-	},
-	{
 		"hrsh7th/nvim-cmp",
 		event = "InsertEnter",
 		opts = function()

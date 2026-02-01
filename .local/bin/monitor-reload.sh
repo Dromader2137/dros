@@ -63,6 +63,8 @@ main() {
             hyprctl keyword monitor "$monitor,disable"
         done
     fi
+
+	eww reload
 }
 
 main

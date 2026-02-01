@@ -79,153 +79,135 @@ run_cmd "git clone "$CONFIG_REPO" .dotfiles"
 
 cd .dotfiles
 
-if gum confirm "Do you want to setup fish?"; then
-	info "Installing Fish"
-	run_cmd ""$AUR_HELPER" -S --noconfirm --needed fish"
-	info "Installing Eza (ls replacement with nice colors)"
-	run_cmd ""$AUR_HELPER" -S --noconfirm --needed eza"
-	info "Setting Fish as the default shell"
-	run_cmd "sudo chsh -s /usr/bin/fish "$USER""
+info "Installing Fish"
+run_cmd ""$AUR_HELPER" -S --noconfirm --needed fish"
+info "Installing Eza (ls replacement with nice colors)"
+run_cmd ""$AUR_HELPER" -S --noconfirm --needed eza"
+info "Setting Fish as the default shell"
+run_cmd "sudo chsh -s /usr/bin/fish "$USER""
 
-	if gum confirm "Do you want to install Starship prompt?"; then
-		info "Installing Starship"
-		run_cmd ""$AUR_HELPER" -S --noconfirm --needed starship"
-	fi
-fi
+info "Installing Starship"
+run_cmd ""$AUR_HELPER" -S --noconfirm --needed starship"
 
-if gum confirm "Do you want to setup nvim?"; then
-	info "Installing Neovim"
-	run_cmd ""$AUR_HELPER" -S --noconfirm --needed neovim"
-fi
+info "Installing Neovim"
+run_cmd ""$AUR_HELPER" -S --noconfirm --needed neovim"
 
 GRAPHICS_ENV="none"
 
-if gum confirm "Do you want to setup graphical environment?"; then
-	info "Choose your graphical driver to install"
+info "Choose your graphical driver to install"
 
-	DRIVER_CHOICE=$(gum choose --limit=1 "intel" "amd" "nvidia" "nvidia-opensource" "none" --cursor.foreground 212 --height 5)
+DRIVER_CHOICE=$(gum choose --limit=1 "intel" "amd" "nvidia" "nvidia-opensource" "none" --cursor.foreground 212 --height 5)
 
-	for DRIVER in $DRIVER_CHOICE; do
-		case "$DRIVER" in
-			intel)
-				info "Installing Intel graphics drivers"
-				run_cmd ""$AUR_HELPER" -S --noconfirm --needed mesa libva-intel-driver vulkan-intel lib32-vulkan-intel libvpl vpl-gpu-rt"
-				;;
-			amd)
-				info "Installing AMD graphics drivers"
-				run_cmd ""$AUR_HELPER" -S --noconfirm --needed mesa vulkan-radeon lib32-vulkan-radeon"
-				;;
-			nvidia)
-				info "Installing NVIDIA proprietary drivers"
-				run_cmd ""$AUR_HELPER" -S --noconfirm --needed nvidia-open nvidia-utils lib32-nvidia-utils libva-nvidia-driver"
-				;;
-			nvidia-opensource)
-				info "Installing NVIDIA open-source drivers"
-				run_cmd ""$AUR_HELPER" -S --noconfirm --needed mesa vulkan-nouveau lib32-vulkan-nouveau"
-				;;
-			none)
-				warn "Skipping graphical driver installation"
-				;;
-			*)
-				warn "Unknown option: $DRIVER, skipping"
-				;;
-		esac
-	done
+for DRIVER in $DRIVER_CHOICE; do
+	case "$DRIVER" in
+		intel)
+			info "Installing Intel graphics drivers"
+			run_cmd ""$AUR_HELPER" -S --noconfirm --needed mesa libva-intel-driver vulkan-intel lib32-vulkan-intel libvpl vpl-gpu-rt"
+			;;
+		amd)
+			info "Installing AMD graphics drivers"
+			run_cmd ""$AUR_HELPER" -S --noconfirm --needed mesa vulkan-radeon lib32-vulkan-radeon"
+			;;
+		nvidia)
+			info "Installing NVIDIA proprietary drivers"
+			run_cmd ""$AUR_HELPER" -S --noconfirm --needed nvidia-open nvidia-utils lib32-nvidia-utils libva-nvidia-driver"
+			;;
+		nvidia-opensource)
+			info "Installing NVIDIA open-source drivers"
+			run_cmd ""$AUR_HELPER" -S --noconfirm --needed mesa vulkan-nouveau lib32-vulkan-nouveau"
+			;;
+		none)
+			warn "Skipping graphical driver installation"
+			;;
+		*)
+			warn "Unknown option: $DRIVER, skipping"
+			;;
+	esac
+done
 
-	info "Installing desktop packages"
-	run_cmd ""$AUR_HELPER" -S --noconfirm --needed qt5ct qt6ct hyprland alacritty eww calibre jq socat imv rofi zathura zathura-pdf-mupdf librewolf slurp grim mpv ttf-mononoki-nerd nerd-fonts-symbols-mono nerd-fonts-symbols nerd-fonts-symbols-common noto-fonts-emoji hyprlock ttf-hanazono bibata-cursor-translucent xdg-desktop-portal-hyprland brightnessctl"
+info "Installing desktop packages"
+run_cmd ""$AUR_HELPER" -S --noconfirm --needed qt5ct qt6ct hyprland alacritty eww calibre jq socat imv rofi zathura zathura-pdf-mupdf librewolf slurp grim mpv ttf-mononoki-nerd nerd-fonts-symbols-mono nerd-fonts-symbols nerd-fonts-symbols-common noto-fonts-emoji hyprlock ttf-hanazono bibata-cursor-translucent xdg-desktop-portal-hyprland brightnessctl"
 
-	GRAPHICS_ENV="hypr"
+GRAPHICS_ENV="hypr"
 
-	run_cmd "librewolf --headless & sleep 5; pkill librewolf"
-	LIBREWOLF_PROFILE_DIR=$(find "$HOME/.librewolf" -maxdepth 1 -type d -name "*.default-default" | head -n 1)
-	if [ -d "$LIBREWOLF_PROFILE_DIR" ]; then
-		copy_config "$CLONE_DIR/non-stowable/userChrome.css" "$LIBREWOLF_PROFILE_DIR/chrome/userChrome.css"
-		echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' >> "$LIBREWOLF_PROFILE_DIR/user.js"
-		echo 'user_pref("browser.toolbars.bookmarks.visibility", "never");' >> "$LIBREWOLF_PROFILE_DIR/user.js"
+run_cmd "librewolf --headless & sleep 5; pkill librewolf"
+LIBREWOLF_PROFILE_DIR=$(find "$HOME/.librewolf" -maxdepth 1 -type d -name "*.default-default" | head -n 1)
+if [ -d "$LIBREWOLF_PROFILE_DIR" ]; then
+	copy_config "$CLONE_DIR/non-stowable/userChrome.css" "$LIBREWOLF_PROFILE_DIR/chrome/userChrome.css"
+	echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' >> "$LIBREWOLF_PROFILE_DIR/user.js"
+	echo 'user_pref("browser.toolbars.bookmarks.visibility", "never");' >> "$LIBREWOLF_PROFILE_DIR/user.js"
+else
+	warn "LibreWolf profile not found, skipping chrome config"
+fi
+
+run_cmd "gsettings set org.gnome.desktop.interface gtk-theme gruvbox"
+run_cmd "gsettings set org.gnome.desktop.interface font-name 'Mononoki Nerd Font 12'"
+run_cmd "gsettings set org.gnome.desktop.interface monospace-font-name 'Mononoki Nerd Font Mono 12'"
+run_cmd "gsettings set org.gnome.desktop.interface document-font-name 'Mononoki Nerd Font 12'"
+run_cmd "gsettings set org.gnome.desktop.interface cursor-theme 'Bibata_Spirit'"
+run_cmd "gsettings set org.gnome.desktop.interface cursor-size 28"
+run_cmd "gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'"
+
+for DRIVER in $DRIVER_CHOICE; do
+	if [[ "$DRIVER" == "nvidia" ]]; then
+		echo -e '\nenv = LIBVA_DRIVER_NAME,nvidia\nenv = __GLX_VENDOR_LIBRARY_NAME,nvidia\nenv = NVD_BACKEND,direct' >> "$HOME/.config/hypr/hyprland_additionl_env.conf"
+		run_cmd "sudo cp /etc/mkinitcpio.conf /etc/mkinitcpio.conf.bak"
+		run_cmd "sudo sed -i 's|^MODULES=.*|MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)|' '/etc/mkinitcpio.conf'"
+		run_cmd "sudo mkinitcpio -P"
+	elif [[ "$DRIVER" == "nvidia-opensource" ]]; then
+		run_cmd "sudo cp /etc/mkinitcpio.conf /etc/mkinitcpio.conf.bak"
+		run_cmd "sudo sed -i 's|^MODULES=.*|MODULES=(nouveau)|' '/etc/mkinitcpio.conf'"
+		run_cmd "sudo mkinitcpio -P"
+	fi
+done
+
+info "Creating XDG user directories"
+XDG_DESKTOP_DIR="$HOME/desktop"
+XDG_DOWNLOAD_DIR="$HOME/downloads"
+XDG_TEMPLATES_DIR="$HOME/templates"
+XDG_PUBLICSHARE_DIR="$HOME/public"
+XDG_DOCUMENTS_DIR="$HOME/documents"
+XDG_MUSIC_DIR="$HOME/music"
+XDG_PICTURES_DIR="$HOME/pictures"
+XDG_VIDEOS_DIR="$HOME/videos"
+for dir in "$XDG_DESKTOP_DIR" "$XDG_DOWNLOAD_DIR" "$XDG_TEMPLATES_DIR" "$XDG_PUBLICSHARE_DIR" "$XDG_DOCUMENTS_DIR" "$XDG_MUSIC_DIR" "$XDG_PICTURES_DIR" "$XDG_VIDEOS_DIR"; do
+	if [ ! -d "$dir" ]; then
+		mkdir -p "$dir"
 	else
-		warn "LibreWolf profile not found, skipping chrome config"
+		warn "Directory $dir already exists"
 	fi
-
-	run_cmd "gsettings set org.gnome.desktop.interface gtk-theme gruvbox"
-	run_cmd "gsettings set org.gnome.desktop.interface font-name 'Mononoki Nerd Font 12'"
-	run_cmd "gsettings set org.gnome.desktop.interface monospace-font-name 'Mononoki Nerd Font Mono 12'"
-	run_cmd "gsettings set org.gnome.desktop.interface document-font-name 'Mononoki Nerd Font 12'"
-	run_cmd "gsettings set org.gnome.desktop.interface cursor-theme 'Bibata_Spirit'"
-	run_cmd "gsettings set org.gnome.desktop.interface cursor-size 28"
-	run_cmd "gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'"
-
-	for DRIVER in $DRIVER_CHOICE; do
-		if [[ "$DRIVER" == "nvidia" ]]; then
-			echo -e '\nenv = LIBVA_DRIVER_NAME,nvidia\nenv = __GLX_VENDOR_LIBRARY_NAME,nvidia\nenv = NVD_BACKEND,direct' >> "$HOME/.config/hypr/hyprland_additionl_env.conf"
-			run_cmd "sudo cp /etc/mkinitcpio.conf /etc/mkinitcpio.conf.bak"
-			run_cmd "sudo sed -i 's|^MODULES=.*|MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)|' '/etc/mkinitcpio.conf'"
-			run_cmd "sudo mkinitcpio -P"
-		elif [[ "$DRIVER" == "nvidia-opensource" ]]; then
-			run_cmd "sudo cp /etc/mkinitcpio.conf /etc/mkinitcpio.conf.bak"
-			run_cmd "sudo sed -i 's|^MODULES=.*|MODULES=(nouveau)|' '/etc/mkinitcpio.conf'"
-			run_cmd "sudo mkinitcpio -P"
-		fi
-	done
-
-	info "Creating XDG user directories"
-	XDG_DESKTOP_DIR="$HOME/desktop"
-	XDG_DOWNLOAD_DIR="$HOME/downloads"
-	XDG_TEMPLATES_DIR="$HOME/templates"
-	XDG_PUBLICSHARE_DIR="$HOME/public"
-	XDG_DOCUMENTS_DIR="$HOME/documents"
-	XDG_MUSIC_DIR="$HOME/music"
-	XDG_PICTURES_DIR="$HOME/pictures"
-	XDG_VIDEOS_DIR="$HOME/videos"
-	for dir in "$XDG_DESKTOP_DIR" "$XDG_DOWNLOAD_DIR" "$XDG_TEMPLATES_DIR" "$XDG_PUBLICSHARE_DIR" "$XDG_DOCUMENTS_DIR" "$XDG_MUSIC_DIR" "$XDG_PICTURES_DIR" "$XDG_VIDEOS_DIR"; do
-		if [ ! -d "$dir" ]; then
-			mkdir -p "$dir"
-		else
-			warn "Directory $dir already exists"
-		fi
-	done
+done
 
 
-	if gum confirm "Do you want to setup sound with Pipewire?"; then
-		info "Installing Pipewire, Pipewire-Pulse, WirePlumber, and Pulsemixer"
-		run_cmd ""$AUR_HELPER" -S --noconfirm --needed pipewire pipewire-pulse wireplumber pulsemixer"
-		info "Enabling and starting Pipewire services"
-		run_cmd "systemctl --user enable --now pipewire pipewire-pulse wireplumber"
-	fi
-
-	if gum confirm "Do you want to setup sound with MPD and NCMPCPP?"; then
-		info "Installing MPD and NCMPCPP"
-		run_cmd ""$AUR_HELPER" -S --noconfirm --needed mpd ncmpcpp"
-	fi
-
-	if gum confirm "Do you want to setup Bluetooth?"; then
-		info "Installing Bluetooth"
-		run_cmd ""$AUR_HELPER" -S --noconfirm --needed bluez bluez-utils bluetui"
-		info "Enabling and starting Bluetooth service"
-		run_cmd "sudo systemctl enable --now bluetooth"
-	fi
+info "Installing Pipewire, Pipewire-Pulse, WirePlumber, and Pulsemixer"
+run_cmd ""$AUR_HELPER" -S --noconfirm --needed pipewire pipewire-pulse wireplumber pulsemixer"
+info "Enabling and starting Pipewire services"
+run_cmd "systemctl --user enable --now pipewire pipewire-pulse wireplumber"
+info "Installing MPD and NCMPCPP"
+run_cmd ""$AUR_HELPER" -S --noconfirm --needed mpd ncmpcpp"
+info "Installing Bluetooth"
+run_cmd ""$AUR_HELPER" -S --noconfirm --needed bluez bluez-utils bluetui"
+info "Enabling and starting Bluetooth service"
+run_cmd "sudo systemctl enable --now bluetooth"
 fi
 
-if gum confirm "Do you want to setup rust?"; then
-	info "Installing Rustup"
-	run_cmd ""$AUR_HELPER" -S --noconfirm rustup"
+info "Installing Rustup"
+run_cmd ""$AUR_HELPER" -S --noconfirm rustup"
 
-	if gum confirm "Do you want to setup rust nightly?"; then
-		info "Installing nightly toolchain"
-		run_cmd "rustup install nightly"
-		run_cmd "rustup default nightly"
-	else
-		info "Installing stable toolchain"
-		run_cmd "rustup install stable"
-		run_cmd "rustup default stable"
-	fi
+if gum confirm "Do you want to setup rust nightly?"; then
+	info "Installing nightly toolchain"
+	run_cmd "rustup install nightly"
+	run_cmd "rustup default nightly"
+else
+	info "Installing stable toolchain"
+	run_cmd "rustup install stable"
+	run_cmd "rustup default stable"
 fi
 
-if gum confirm "Do you want to install additional recommended utilities?"; then
-	run_cmd ""$AUR_HELPER" -S --noconfirm --needed zip unzip tar sqlite ripgrep fzf openssh"
-fi
+run_cmd ""$AUR_HELPER" -S --noconfirm --needed zip unzip tar sqlite ripgrep fzf openssh"
 
 run_cmd "mkdir -p $HOME/.config/hypr/hyprland"
+run_cmd "mkdir -p $HOME/.local/state/mpd"
 run_cmd "touch $HOME/.config/hypr/hyprland/local_env.conf"
 run_cmd "touch $HOME/.config/hypr/hyprland/monitors.conf"
 run_cmd "touch $HOME/.config/hypr/hyprland/rules.conf"
@@ -234,4 +216,3 @@ cd "$HOME/.config"
 
 run_cmd "mkdir -P alacritty btop eww fish imv mpd ncmpcpp nvim qt5ct qt6ct rofi xsettingsd zathura gtk-3.0 gtk-4.0"
 run_cmd "stow ."
-
