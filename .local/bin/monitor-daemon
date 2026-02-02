@@ -44,22 +44,27 @@ has_internal_monitor() {
 
 setup_monitors() {
 	local mode=$(cat "$MODE_FILE")
-	if [[ "$mode" -eq "internal" ]] && has_internal_monitor; then
+	echo $mode
+	if [[ "$mode" == "internal" ]] && has_internal_monitor; then
+		echo c
 		hyprctl keyword monitor "$internal_monitor,preferred,auto,1"
 		for monitor in $(get_external_monitors); do
 			hyprctl keyword monitor "$monitor,disable"
 		done
-	elif [[ "$mode" -eq "external" ]] && has_external_monitors; then
-		hyprctl keyword monitor "$internal_monitor,disable"
+	elif [[ "$mode" == "external" ]] && has_external_monitors; then
+		echo x
 		for monitor in $(get_external_monitors); do
+
+		echo $monitor
 			hyprctl keyword monitor "$monitor,preferred,auto,1"
 		done
+		hyprctl keyword monitor "$internal_monitor,disable"
 	else
 		if has_external_monitors; then
-			hyprctl keyword monitor "$internal_monitor,disable"
 			for monitor in $(get_external_monitors); do
 				hyprctl keyword monitor "$monitor,preferred,auto,1"
 			done
+			hyprctl keyword monitor "$internal_monitor,disable"
 		else
 			hyprctl keyword monitor "$internal_monitor,preferred,auto,1"
 			for monitor in $(get_external_monitors); do

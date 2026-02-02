@@ -16,8 +16,3 @@ if [[ "$OPT" == "next" ]]; then
 fi
 	
 echo "$OPT" > "$STATE_FILE"
-
-SOCKET="$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"
-
-printf "monitoradded>>%s\n" "$OPT" | socat - UNIX-CONNECT:"$SOCKET"
-
