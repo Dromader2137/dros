@@ -136,6 +136,7 @@ if [ -d "$LIBREWOLF_PROFILE_DIR" ]; then
 	copy_config "$CLONE_DIR/non-stowable/userChrome.css" "$LIBREWOLF_PROFILE_DIR/chrome/userChrome.css"
 	echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' >> "$LIBREWOLF_PROFILE_DIR/user.js"
 	echo 'user_pref("browser.toolbars.bookmarks.visibility", "never");' >> "$LIBREWOLF_PROFILE_DIR/user.js"
+	echo 'user_pref("browser.tabs.closeWindowWithLastTab", false);' >> "$LIBREWOLF_PROFILE_DIR/user.js"
 else
 	warn "LibreWolf profile not found, skipping chrome config"
 fi

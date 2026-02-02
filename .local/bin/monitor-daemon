@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+
+SOCKET="$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"
+MODE_DIR="$HOME/.local/state/monitor-daemon/"
+MODE_FILE="$MODE_DIR/mode" # contains internal/external/auto
+
+mkdir -p "$MODE_DIR"
+
+if [[ ! -f "$MODE_FILE" ]]; then
+	echo auto > "$MODE_FILE"
+fi
+
+get_all_monitors() {
+    hyprctl monitors all -j | jq -r '.[].name'
+}
+
+get_connected_monitors() {
+    hyprctl monitors -j | jq -r '.[].name'
+}
+
+is_monitor_enabled() {
+    local monitor=$1
+    hyprctl monitors -j | jq -e --arg name "$monitor" '.[] | select(.name == $name)' > /dev/null 2>&1
+    return $?
+}
+
+get_internal_monitor() {
+    hyprctl monitors all -j | jq -r '.[] | select(.name | test("^eDP-[0-9]+$")) | .name' | head -n 1
+}
+
+get_external_monitors() {
+    hyprctl monitors all -j | jq -r '.[] | select(.name | test("^eDP-[0-9]+$") | not) | .name'
+}
+
+has_external_monitors() {
+    local external_count=$(hyprctl monitors all -j | jq '[.[] | select(.name | test("^eDP-[0-9]+$") | not)] | length')
+    [ "$external_count" -gt 0 ]
+}
+
+has_internal_monitor() {
+    local internal_count=$(hyprctl monitors all -j | jq '[.[] | select(.name | test("^eDP-[0-9]+$"))] | length')
+    [ "$internal_count" -gt 0 ]
+}
+
+setup_monitors() {
+	local mode=$(cat "$MODE_FILE")
+	if [[ "$mode" -eq "internal" ]] && has_internal_monitor; then
+		hyprctl keyword monitor "$internal_monitor,preferred,auto,1"
+		for monitor in $(get_external_monitors); do
+			hyprctl keyword monitor "$monitor,disable"
+		done
+	elif [[ "$mode" -eq "external" ]] && has_external_monitors; then
+		hyprctl keyword monitor "$internal_monitor,disable"
+		for monitor in $(get_external_monitors); do
+			hyprctl keyword monitor "$monitor,preferred,auto,1"
+		done
+	else
+		if has_external_monitors; then
+			hyprctl keyword monitor "$internal_monitor,disable"
+			for monitor in $(get_external_monitors); do
+				hyprctl keyword monitor "$monitor,preferred,auto,1"
+			done
+		else
+			hyprctl keyword monitor "$internal_monitor,preferred,auto,1"
+			for monitor in $(get_external_monitors); do
+				hyprctl keyword monitor "$monitor,disable"
+			done
+		fi
+	fi
+}
+
+setup_monitors
+
+while [[ ! -S "$SOCKET" ]]; do
+    sleep 0.2
+done
+
+socat -u UNIX-CONNECT:"$SOCKET" - | while read -r event; do
+    case "$event" in
+        monitoradded*|monitorremoved*)
+			setup_monitors
+            ;;
+    esac
+done

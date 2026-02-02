@@ -21,35 +21,8 @@
   margin-right: 12px !important;
 }
 
-/* Page back and foward buttons */
-#back-button,
-#forward-button {
-  display: none !important
-}
-
-/* Extensions button */
-#unified-extensions-button {
-  display: none !important
-}
-
-/* Extension name inside URL bar */
-#identity-box.extensionPage #identity-icon-label {
-  visibility: collapse !important
-}
-
 /* All tabs (v-like) button */
 #alltabs-button {
-  display: none !important
-}
-
-/* URL bar icons */
-#identity-permission-box,
-#star-button-box,
-#identity-icon-box,
-#picture-in-picture-button,
-#tracking-protection-icon-container,
-#reader-mode-button,
-#translations-button {
   display: none !important
 }
 
@@ -134,10 +107,6 @@
     flex: auto !important
   }
 
-  toolbarspring {
-    display: none !important
-  }
-
   #TabsToolbar,
   #nav-bar {
     transition: margin-top .25s !important
@@ -194,11 +163,6 @@
 /*  Removes annoying border  */
 #navigator-toolbox {
   border: none !important
-}
-
-/* Fades window while not in focus */
-#navigator-toolbox-background:-moz-window-inactive {
-  filter: contrast(90%)
 }
 
 /* Remove fullscreen warning border */

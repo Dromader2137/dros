@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+STATE_FILE="$HOME/.local/state/monitor-daemon/mode"
+VALID_MODES=("auto" "external" "internal")
+OPT="$1"
+
+if [[ "$OPT" == "next" ]]; then
+    current="auto"
+    [[ -f "$STATE_FILE" ]] && current="$(<"$STATE_FILE")"
+
+    case "$current" in
+        internal) OPT="external" ;;
+        external) OPT="auto" ;;
+        auto|*)   OPT="internal" ;;
+    esac
+fi
+	
+echo "$OPT" > "$STATE_FILE"
+
+SOCKET="$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"
+
+printf "monitoradded>>%s\n" "$OPT" | socat - UNIX-CONNECT:"$SOCKET"
+
