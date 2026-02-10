@@ -126,7 +126,7 @@ for DRIVER in $DRIVER_CHOICE; do
 done
 
 info "Installing desktop packages"
-run_cmd ""$AUR_HELPER" -S --noconfirm --needed qt5ct qt6ct hyprland alacritty eww calibre jq socat imv rofi zathura zathura-pdf-mupdf librewolf slurp grim mpv ttf-mononoki-nerd nerd-fonts-symbols-mono nerd-fonts-symbols nerd-fonts-symbols-common noto-fonts-emoji hyprlock ttf-hanazono bibata-cursor-translucent xdg-desktop-portal-hyprland brightnessctl"
+run_cmd ""$AUR_HELPER" -S --noconfirm --needed qt5ct qt6ct hyprland alacritty eww calibre jq socat imv rofi zathura zathura-pdf-mupdf librewolf slurp grim mpv ttf-mononoki-nerd nerd-fonts-symbols-mono nerd-fonts-symbols nerd-fonts-symbols-common noto-fonts-emoji hyprlock ttf-hanazono bibata-cursor-translucent xdg-desktop-portal-hyprland brightnessctl inotify-tools"
 
 GRAPHICS_ENV="hypr"
 

@@ -45,6 +45,9 @@ has_internal_monitor() {
 setup_monitors() {
 	local mode=$(cat "$MODE_FILE")
 	echo $mode
+
+	eww close bar
+
 	if [[ "$mode" == "internal" ]] && has_internal_monitor; then
 		echo c
 		hyprctl keyword monitor "$internal_monitor,preferred,auto,1"
@@ -72,6 +75,8 @@ setup_monitors() {
 			done
 		fi
 	fi
+
+	eww open bar
 }
 
 setup_monitors
@@ -80,9 +85,18 @@ while [[ ! -S "$SOCKET" ]]; do
     sleep 0.2
 done
 
-socat -u UNIX-CONNECT:"$SOCKET" - | while read -r event; do
+{
+	inotifywait -m -e close_write "$MODE_FILE" 2>/dev/null &
+	socat -u UNIX-CONNECT:"$SOCKET" - 
+} | while read -r event; do
+	echo "Update $event"
     case "$event" in
         monitoradded*|monitorremoved*)
+			echo "Update"
+			setup_monitors
+            ;;
+		"$MODE_FILE CLOSE_WRITE,CLOSE")
+			echo "Update"
 			setup_monitors
             ;;
     esac
