@@ -28,7 +28,7 @@
 (defwidget centerstuff []
   (box :class "centerstuff" :orientation "h" :space-evenly false :spacing 20 :halign "center"
     (workspaces)
-  ))
+  )
 
 (defwidget workspaces []
   (box :class "workspaces"

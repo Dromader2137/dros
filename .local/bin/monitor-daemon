@@ -4,6 +4,13 @@ SOCKET="$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"
 MODE_DIR="$HOME/.local/state/monitor-daemon/"
 MODE_FILE="$MODE_DIR/mode" # contains internal/external/auto
 
+# SCRIPT_PATH="bash $(realpath -s $BASH_SOURCE)"
+# OLD_IFS="$IFS"
+# IFS="\n"
+# INSTANCES=($(ps aux | grep "$SCRIPT_PATH"))
+# IFS="$OLD_IFS"
+# echo ${INSTANCES[@]}
+
 mkdir -p "$MODE_DIR"
 
 if [[ ! -f "$MODE_FILE" ]]; then
@@ -44,39 +51,32 @@ has_internal_monitor() {
 
 setup_monitors() {
 	local mode=$(cat "$MODE_FILE")
-	echo $mode
-
-	eww close bar
+	local internal_monitor=$(get_internal_monitor)
+	echo "Mode = $mode, internal monitor = $internal_monitor"
 
 	if [[ "$mode" == "internal" ]] && has_internal_monitor; then
-		echo c
-		hyprctl keyword monitor "$internal_monitor,preferred,auto,1"
+		echo "monitor = $internal_monitor,preferred,auto,1" > "$HOME/.config/hypr/hyprland/monitors.conf"
 		for monitor in $(get_external_monitors); do
-			hyprctl keyword monitor "$monitor,disable"
+			echo "monitor = $monitor,disable" >> "$HOME/.config/hypr/hyprland/monitors.conf"
 		done
 	elif [[ "$mode" == "external" ]] && has_external_monitors; then
-		echo x
+		echo "monitor = $internal_monitor,disable" > "$HOME/.config/hypr/hyprland/monitors.conf"
 		for monitor in $(get_external_monitors); do
-
-		echo $monitor
-			hyprctl keyword monitor "$monitor,preferred,auto,1"
+			echo "monitor = $monitor,preferred,auto,1" >> "$HOME/.config/hypr/hyprland/monitors.conf"
 		done
-		hyprctl keyword monitor "$internal_monitor,disable"
 	else
 		if has_external_monitors; then
+			echo "monitor = $internal_monitor,disable" > "$HOME/.config/hypr/hyprland/monitors.conf"
 			for monitor in $(get_external_monitors); do
-				hyprctl keyword monitor "$monitor,preferred,auto,1"
+				echo "monitor = $monitor,preferred,auto,1" >> "$HOME/.config/hypr/hyprland/monitors.conf"
 			done
-			hyprctl keyword monitor "$internal_monitor,disable"
 		else
-			hyprctl keyword monitor "$internal_monitor,preferred,auto,1"
+			echo "monitor = $internal_monitor,preferred,auto,1" > "$HOME/.config/hypr/hyprland/monitors.conf"
 			for monitor in $(get_external_monitors); do
-				hyprctl keyword monitor "$monitor,disable"
+				echo "monitor = $monitor,disable" >> "$HOME/.config/hypr/hyprland/monitors.conf"
 			done
 		fi
 	fi
-
-	eww open bar
 }
 
 setup_monitors
