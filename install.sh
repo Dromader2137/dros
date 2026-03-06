@@ -186,6 +186,7 @@ info "Enabling and starting Pipewire services"
 run_cmd "systemctl --user enable --now pipewire pipewire-pulse wireplumber"
 info "Installing MPD and NCMPCPP"
 run_cmd ""$AUR_HELPER" -S --noconfirm --needed mpd ncmpcpp"
+run_cmd 'mkdir -p ~/.local/state/mpd/playlists'
 info "Installing Bluetooth"
 run_cmd ""$AUR_HELPER" -S --noconfirm --needed bluez bluez-utils bluetui"
 info "Enabling and starting Bluetooth service"

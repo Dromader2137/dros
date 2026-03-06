@@ -60,7 +60,9 @@ setup_monitors() {
 			echo "monitor = $monitor,disable" >> "$HOME/.config/hypr/hyprland/monitors.conf"
 		done
 	elif [[ "$mode" == "external" ]] && has_external_monitors; then
-		echo "monitor = $internal_monitor,disable" > "$HOME/.config/hypr/hyprland/monitors.conf"
+		if [[ $internal_monitor != "" ]]; then
+			echo "monitor = $internal_monitor,disable" > "$HOME/.config/hypr/hyprland/monitors.conf"
+		fi
 		for monitor in $(get_external_monitors); do
 			echo "monitor = $monitor,preferred,auto,1" >> "$HOME/.config/hypr/hyprland/monitors.conf"
 		done
