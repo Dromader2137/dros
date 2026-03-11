@@ -3,13 +3,15 @@
 SOCKET="$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"
 MODE_DIR="$HOME/.local/state/monitor-daemon/"
 MODE_FILE="$MODE_DIR/mode" # contains internal/external/auto
+MONITOR_OPTS="cm,srgb,bitdepth,10"
+LOCKFILE="$MODE_DIR/running.lock"
 
-# SCRIPT_PATH="bash $(realpath -s $BASH_SOURCE)"
-# OLD_IFS="$IFS"
-# IFS="\n"
-# INSTANCES=($(ps aux | grep "$SCRIPT_PATH"))
-# IFS="$OLD_IFS"
-# echo ${INSTANCES[@]}
+exec 200>"$LOCKFILE" || exit 1
+
+flock -n 200 || {
+    echo "Another instance is already running."
+    exit 1
+}
 
 mkdir -p "$MODE_DIR"
 
@@ -55,7 +57,7 @@ setup_monitors() {
 	echo "Mode = $mode, internal monitor = $internal_monitor"
 
 	if [[ "$mode" == "internal" ]] && has_internal_monitor; then
-		echo "monitor = $internal_monitor,preferred,auto,1" > "$HOME/.config/hypr/hyprland/monitors.conf"
+		echo "monitor = $internal_monitor,preferred,auto,1,$MONITOR_OPTS" > "$HOME/.config/hypr/hyprland/monitors.conf"
 		for monitor in $(get_external_monitors); do
 			echo "monitor = $monitor,disable" >> "$HOME/.config/hypr/hyprland/monitors.conf"
 		done
@@ -64,21 +66,23 @@ setup_monitors() {
 			echo "monitor = $internal_monitor,disable" > "$HOME/.config/hypr/hyprland/monitors.conf"
 		fi
 		for monitor in $(get_external_monitors); do
-			echo "monitor = $monitor,preferred,auto,1" >> "$HOME/.config/hypr/hyprland/monitors.conf"
+			echo "monitor = $monitor,preferred,auto,1,$MONITOR_OPTS" >> "$HOME/.config/hypr/hyprland/monitors.conf"
 		done
 	else
 		if has_external_monitors; then
 			echo "monitor = $internal_monitor,disable" > "$HOME/.config/hypr/hyprland/monitors.conf"
 			for monitor in $(get_external_monitors); do
-				echo "monitor = $monitor,preferred,auto,1" >> "$HOME/.config/hypr/hyprland/monitors.conf"
+				echo "monitor = $monitor,preferred,auto,1,$MONITOR_OPTS" >> "$HOME/.config/hypr/hyprland/monitors.conf"
 			done
 		else
-			echo "monitor = $internal_monitor,preferred,auto,1" > "$HOME/.config/hypr/hyprland/monitors.conf"
+			echo "monitor = $internal_monitor,preferred,auto,1,$MONITOR_OPTS" > "$HOME/.config/hypr/hyprland/monitors.conf"
 			for monitor in $(get_external_monitors); do
 				echo "monitor = $monitor,disable" >> "$HOME/.config/hypr/hyprland/monitors.conf"
 			done
 		fi
 	fi
+
+	eww reload
 }
 
 setup_monitors

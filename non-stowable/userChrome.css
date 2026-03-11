@@ -5,7 +5,15 @@
 *  👉 https://github.com/JarnotMaciej/Essence 👈 Thank you~~ 🤗
 */
 
+.browserStack {
+	background-color: #282828;
+}
+
 /* Just comment the lines or blocks for the elements you WANT to see */
+browser {
+	border-radius: 5px !important;
+	margin: 5px !important;
+}
 
 /* Menu button */
 #PanelUI-button {
@@ -206,4 +214,8 @@
   background: none !important;
   cursor: pointer;
   display: -moz-box !important;
+}
+
+.letterboxing {
+  --letterboxing-bgcolor: #282828 !important;
 }

@@ -31,7 +31,6 @@ return {
 	keys = {
 		{ "<leader>ff", function() Snacks.picker.files() end, desc = "Smart Find Files" },
 		{ "<leader>fg", function() Snacks.picker.grep() end, desc = "Grep" },
-		{ "<leader>fe", function() Snacks.explorer() end, desc = "File Explorer" },
 		{ "<leader>cd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
 		{ "<leader>cD", function() Snacks.picker.diagnostics_buffer() end, desc = "Diagnostics buffer" },
 	}
