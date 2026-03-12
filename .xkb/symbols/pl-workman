@@ -1,0 +1,49 @@
+partial alphanumeric_keys
+xkb_symbols "workman_pl_de" {
+
+    name[Group1]= "English Polish German (Workman) Custom Layout";
+
+    include "us(basic)"
+
+    // Alphanumeric section
+    key <AE11> { [     minus, underscore,    ssharp,           ssharp ] };
+
+    key <AD01> { [     q,          Q,             q,                Q ] };
+    key <AD02> { [     d,          D,             d,                D ] };
+    key <AD03> { [     r,          R,             r,                R ] };
+    key <AD04> { [     w,          W,             w,                W ] };
+    key <AD05> { [     b,          B,             b,                B ] };
+    key <AD06> { [     j,          J,             j,                J ] };
+    key <AD07> { [     f,          F,             f,                F ] };
+    key <AD08> { [     u,          U,             u,                U ] };
+    key <AD09> { [     p,          P,             p,                P ] };
+    key <AD10> { [ semicolon,  colon,     paragraph,           degree ] };
+    key <AD11> { [ bracketleft,  braceleft, udiaeresis,    Udiaeresis ] };
+
+    key <AC01> { [     a,          A,       aogonek,          Aogonek ] };
+    key <AC02> { [     s,          S,        sacute,           Sacute ] };
+    key <AC03> { [     h,          H,             h,                H ] };
+    key <AC04> { [     t,          T,             t,                T ] };
+    key <AC05> { [     g,          G,             g,                G ] };
+    key <AC06> { [     y,          Y,             y,                Y ] };
+    key <AC07> { [     n,          N,        nacute,           Nacute ] };
+    key <AC08> { [     e,          E,       eogonek,          Eogonek ] };
+    key <AC09> { [     o,          O,        oacute,           Oacute ] };
+    key <AC10> { [     i,          I,    odiaeresis,       Odiaeresis ] };
+    key <AC11> { [ apostrophe,	quotedbl, adiaeresis,      Adiaeresis ]	};
+
+    key <AB01> { [     z,          Z,     zabovedot,        Zabovedot ] };
+    key <AB02> { [     x,          X,        zacute,           Zacute ] };
+    key <AB03> { [     m,          M,            mu,               mu ] };
+    key <AB04> { [     c,          C,        cacute,           Cacute ] };
+    key <AB05> { [     v,          V,             v,                V ] };
+    key <AB06> { [     k,          K,             k,                K ] };
+    key <AB07> { [     l,          L,       lstroke,          Lstroke ] };
+    // End alphanumeric section
+
+    key <CAPS> { [    BackSpace,       Escape,       BackSpace,        BackSpace ] };
+
+    include "level3(ralt_switch)"
+};
+
+
