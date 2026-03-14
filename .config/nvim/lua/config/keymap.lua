@@ -21,6 +21,11 @@ map("n", "<leader>wv", "<C-w>v")
 map("n", "<leader>wh", "<C-w>s")
 map("n", "<leader>wc", "<C-w>c")
 
+map("n", "<leader>wn", "<C-w>h")
+map("n", "<leader>we", "<C-w>j")
+map("n", "<leader>wo", "<C-w>k")
+map("n", "<leader>wi", "<C-w>l")
+
 map({"n", "v"}, "<M-n>", "h")
 map({"n", "v"}, "<M-e>", "j")
 map({"n", "v"}, "<M-o>", "k")
