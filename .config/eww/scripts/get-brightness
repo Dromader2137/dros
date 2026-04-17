@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Watch the backlight brightness file and emit the percentage only when it changes.
+# Intended as an eww `deflisten` source.
+#
+# Usage: watch-brightness [backlight-dir]
+#   defaults to the first device under /sys/class/backlight
+
+set -u
+
+dir="${1:-$(find /sys/class/backlight -maxdepth 1 -mindepth 1 | head -n 1)}"
+
+if [ -z "$dir" ] || [ ! -d "$dir" ]; then
+    echo "error: no backlight device found" >&2
+    exit 1
+fi
+
+file="$dir/brightness"
+max=$(<"$dir/max_brightness")
+
+last=""
+emit() {
+    local cur pct
+    cur=$(<"$file")
+    pct=$(( 100 * cur / max ))
+    if [ "$pct" != "$last" ]; then
+        printf '%s\n' "$pct"
+        last="$pct"
+    fi
+}
+
+# Emit the initial value so eww has something to render before the first change.
+emit
+
+if command -v inotifywait >/dev/null 2>&1; then
+    # -m keeps the watch alive, -q silences its own output, -e modify fires on writes.
+    inotifywait -m -q -e modify "$file" | while read -r _; do
+        emit
+    done
+else
+    # Fallback if inotify-tools isn't installed.
+    while sleep 0.5; do
+        emit
+    done
+fi

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Watch the default sink's volume via pactl and emit the percentage only when it changes.
+# Intended as an eww `deflisten` source.
+
+set -u
+
+get_mute() {
+	pactl get-source-mute @DEFAULT_SOURCE@ 2>/dev/null \
+              | grep yes &>/dev/null && echo 1 || echo 0
+}
+
+last=""
+emit() {
+    local pct
+    pct=$(get_mute)
+    if [ -n "$pct" ] && [ "$pct" != "$last" ]; then
+        printf '%s\n' "$pct"
+        last="$pct"
+    fi
+}
+
+# Emit the initial value so eww has something to render immediately.
+emit
+
+# `pactl subscribe` streams every pulse/pipewire event. We care about sink changes
+# (volume/mute on any sink) and server changes (default sink switched).
+# --line-buffered on grep is required so events reach the loop without delay.
+pactl subscribe 2>/dev/null \
+    | grep --line-buffered -E "Event 'change' on (source|server)" \
+    | while read -r _; do
+        emit
+    done
