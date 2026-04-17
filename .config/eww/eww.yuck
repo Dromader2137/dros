@@ -9,7 +9,10 @@
     (systray  :class "systray" :icon-size 18 :spacing 10 :prepend-new true :space-evenly true :orientation "h")
     (box "  ${round(EWW_RAM.used_mem_perc, 0)}%")
     (box "  ${round(EWW_CPU.avg, 0)}%")
-    (box "󱐋 ${round(EWW_BATTERY.BAT0.capacity, 0)}%")
+	(box "${brightness >= 30 ? "󰃠" : "󰃞"}  ${brightness}%")
+	(box "${mute == "0" ? "󰕾" : "󰖁"} ${volume}%")
+	(box "${mic-mute == "0" ? "" : ""} ${mic-volume}%")
+    (box "${EWW_BATTERY.BAT0.status == "Charging" ? "󱐋" : "󰁹"} ${round(EWW_BATTERY.BAT0.capacity, 0)}%")
     (box "  ${net}")
   ))
 
@@ -17,6 +20,18 @@
   (box :class "leftstuff" :orientation "h" :space-evenly false :spacing 20 :halign "start"
     time
   ))
+
+(deflisten mic-mute :initial "0"
+  "scripts/get-mic-mute")
+
+(deflisten mic-volume :initial "0"
+  "scripts/get-mic-volume")
+
+(deflisten mute :initial "0"
+  "scripts/get-mute")
+
+(deflisten volume :initial "0"
+  "scripts/get-volume")
 
 (defpoll time :interval "10s"
   "date '+%H:%M %Y-%m-%d'")
@@ -49,6 +64,9 @@
 
 (deflisten fws :initial "1"
   "scripts/get-focused-workspace")
+
+(deflisten brightness :initial "1"
+  "scripts/get-brightness")
 
 (defwindow bar
   :monitor 0
