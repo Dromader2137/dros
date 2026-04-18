@@ -8,6 +8,8 @@ if status is-interactive
     export EDITOR="nvim"
     export VISUAL="nvim"
 
+	alias nv="nvim"
+
     alias ls="exa -l --group-directories-first -s Extension"
     alias la="exa -la --group-directories-first -s Extension"
     alias ll="exa -la --group-directories-first -s Extension -T -L 2"
@@ -25,6 +27,7 @@ if status is-interactive
     alias gcb="git checkout -b"
     alias gbm="git branch -m"
     alias gbd="git branch -D"
+	alias gm="git merge"
 
     alias disk="lsblk -a -o NAME,SIZE,FSUSED,TYPE,FSTYPE,MOUNTPOINTS"
 
