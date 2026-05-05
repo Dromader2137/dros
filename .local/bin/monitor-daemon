@@ -5,6 +5,7 @@ MODE_DIR="$HOME/.local/state/monitor-daemon/"
 MODE_FILE="$MODE_DIR/mode" # contains internal/external/auto
 MONITOR_OPTS="cm,srgb,bitdepth,10"
 LOCKFILE="$MODE_DIR/running.lock"
+LOGFILE="$MODE_DIR/log"
 
 exec 200>"$LOCKFILE" || exit 1
 
@@ -13,11 +14,15 @@ flock -n 200 || {
     exit 1
 }
 
+trap 'exec 200>&-' EXIT
+
 mkdir -p "$MODE_DIR"
 
 if [[ ! -f "$MODE_FILE" ]]; then
 	echo auto > "$MODE_FILE"
 fi
+
+echo "" > "$LOGFILE"
 
 get_all_monitors() {
     hyprctl monitors all -j | jq -r '.[].name'
@@ -54,8 +59,6 @@ has_internal_monitor() {
 setup_monitors() {
 	local mode=$(cat "$MODE_FILE")
 	local internal_monitor=$(get_internal_monitor)
-	echo "Mode = $mode, internal monitor = $internal_monitor"
-
 	if [[ "$mode" == "internal" ]] && has_internal_monitor; then
 		echo "monitor = $internal_monitor,preferred,auto,1,$MONITOR_OPTS" > "$HOME/.config/hypr/hyprland/monitors.conf"
 		for monitor in $(get_external_monitors); do
@@ -70,7 +73,9 @@ setup_monitors() {
 		done
 	else
 		if has_external_monitors; then
-			echo "monitor = $internal_monitor,disable" > "$HOME/.config/hypr/hyprland/monitors.conf"
+			if [[ $internal_monitor != "" ]]; then
+				echo "monitor = $internal_monitor,disable" > "$HOME/.config/hypr/hyprland/monitors.conf"
+			fi
 			for monitor in $(get_external_monitors); do
 				echo "monitor = $monitor,preferred,auto,1,$MONITOR_OPTS" >> "$HOME/.config/hypr/hyprland/monitors.conf"
 			done
@@ -81,6 +86,7 @@ setup_monitors() {
 			done
 		fi
 	fi
+	echo "Setup `cat $HOME/.config/hypr/hyprland/monitors.conf`" >> "$LOGFILE"
 
 	eww reload
 }
@@ -95,15 +101,17 @@ done
 	inotifywait -m -e close_write "$MODE_FILE" 2>/dev/null &
 	socat -u UNIX-CONNECT:"$SOCKET" - 
 } | while read -r event; do
-	echo "Update $event"
+	echo "Update $event" >> "$LOGFILE"
     case "$event" in
         monitoradded*|monitorremoved*)
-			echo "Update"
+			echo "Update $event" >> "$LOGFILE"
 			setup_monitors
             ;;
 		"$MODE_FILE CLOSE_WRITE,CLOSE")
-			echo "Update"
+			echo "Update $event" >> "$LOGFILE"
 			setup_monitors
             ;;
     esac
 done
+
+echo "Exiting" >> "$LOGFILE"
