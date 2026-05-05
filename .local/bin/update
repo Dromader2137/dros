@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+function info() { echo -e "\e[32m[INFO]\e[0m $1"; }
+function warn() { echo -e "\e[33m[WARN]\e[0m $1"; }
+function error() { echo -e "\e[31m[ERROR]\e[0m $1"; }
+
+info "You must have sudo privilages on the system!"
+
+LOG_FILE="/tmp/arch-update.log"
+run_cmd() {
+	local cmd="$*"
+	echo -e "\n Running: $cmd" >> "$LOG_FILE"
+
+	if ! eval "$cmd" >> "$LOG_FILE" 2>&1; then
+		error "Command failed: $cmd"
+		echo "---- Output from log ----"
+		tail -n 50 "$LOG_FILE"
+		echo "-------------------------"
+		exit 1
+	fi
+}
+
+run_cmd "yay -Syyu --noconfirm"
+run_cmd "rustup update"
+run_cmd "gsettings set org.gnome.desktop.interface gtk-theme gruvbox"
+run_cmd "gsettings set org.gnome.desktop.interface font-name 'Mononoki Nerd Font 12'"
+run_cmd "gsettings set org.gnome.desktop.interface monospace-font-name 'Mononoki Nerd Font Mono 12'"
+run_cmd "gsettings set org.gnome.desktop.interface document-font-name 'Mononoki Nerd Font 12'"
+run_cmd "gsettings set org.gnome.desktop.interface cursor-theme 'Bibata_Spirit'"
+run_cmd "gsettings set org.gnome.desktop.interface cursor-size 28"
+run_cmd "gsettings set org.gnome.desktop.interface color-scheme prefer-dark"

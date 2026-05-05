@@ -147,7 +147,7 @@ run_cmd "gsettings set org.gnome.desktop.interface monospace-font-name 'Mononoki
 run_cmd "gsettings set org.gnome.desktop.interface document-font-name 'Mononoki Nerd Font 12'"
 run_cmd "gsettings set org.gnome.desktop.interface cursor-theme 'Bibata_Spirit'"
 run_cmd "gsettings set org.gnome.desktop.interface cursor-size 28"
-run_cmd "gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'"
+run_cmd "gsettings set org.gnome.desktop.interface color-scheme prefer-dark"
 
 for DRIVER in $DRIVER_CHOICE; do
 	if [[ "$DRIVER" == "nvidia" ]]; then
@@ -213,6 +213,7 @@ run_cmd "mkdir -p $HOME/.local/state/mpd"
 run_cmd "touch $HOME/.config/hypr/hyprland/local_env.conf"
 run_cmd "touch $HOME/.config/hypr/hyprland/monitors.conf"
 run_cmd "touch $HOME/.config/hypr/hyprland/rules.conf"
+run_cmd "mkdir -p $HOME/.local/bin"
 
 cd "$HOME/.config"
 
