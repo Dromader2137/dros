@@ -15,6 +15,7 @@ if status is-interactive
 	export VISUAL="nvim"
 
 	alias nv="nvim"
+	alias hx="helix"
 
 	alias ls="exa -l --group-directories-first -s Extension"
 	alias la="exa -la --group-directories-first -s Extension"
