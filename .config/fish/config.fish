@@ -3,7 +3,22 @@ contains $HOME/.local/bin/ $fish_user_paths; or set -Ua fish_user_paths $HOME/.l
 contains $HOME/.nsight/nsys/bin/ $fish_user_paths; or set -Ua fish_user_paths $HOME/.nsight/nsys/bin/
 
 if status is-login
-	start
+	export XCURSOR_SIZE=28
+	export XCURSOR_THEME=Bibata_Spirit
+	export XDG_SESSION_TYPE=wayland
+	export XDG_SESSION_DESKTOP=sway
+	export QT_QPA_PLATFORMTHEME=qt6ct
+	export QT_QPA_PLATFORM=wayland
+	export GTK_THEME=gruvbox
+	export ELECTRON_OZONE_PLATFORM_HINT=auto
+	export BROWSER=librewolf
+	export EDITOR=nvim
+	export VISUAL=nvim
+	export CALIBRE_USE_SYSTEM_THEME=true
+	export VULKAN_HOME=$HOME/.local/share/vulkan-sdk
+	export VULKAN_DOWNLOAD=$HOME/.local/share/vulkan-sdk/releases
+
+	WLR_RENDERER=vulkan sway
 end
 
 if status is-interactive

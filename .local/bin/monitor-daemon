@@ -87,7 +87,7 @@ setup_monitors() {
 		fi
 	fi
 	echo "Setup `cat $HOME/.config/hypr/hyprland/monitors.conf`" >> "$LOGFILE"
-
+	sleep 0.5
 	eww reload
 }
 

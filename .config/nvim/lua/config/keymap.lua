@@ -33,5 +33,6 @@ map({"n", "v"}, "<M-i>", "l")
 
 map("n", "<leader>gb", "<C-o>")
 map("n", "<leader>gf", "<C-i>")
+map("n", "<leader>cs", ":let @/=\"\"<CR>")
 
 map("n", "<leader>fe", ":Oil<CR>")
