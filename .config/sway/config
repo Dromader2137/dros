@@ -7,6 +7,9 @@ set $term alacritty
 set $menu rofi -show drun 
 
 seat seat0 xcursor_theme Bibata_Spirit 28
+focus_follows_mouse yes
+
+exec swaybg -o '*' -c 1d2021
 
 exec mpd
 exec eww open bar
