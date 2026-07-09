@@ -13,7 +13,7 @@ run_cmd() {
 	local cmd="$*"
 	echo -e "\n Running: $cmd" >> "$LOG_FILE"
 
-	if ! eval "$cmd" >> "$LOG_FILE" 2>&1; then
+	if ! eval "$cmd" 2>&1 | tee "$LOG_FILE" 2>&1; then
 		error "Command failed: $cmd"
 		echo "---- Output from log ----"
 		tail -n 50 "$LOG_FILE"
@@ -23,7 +23,7 @@ run_cmd() {
 }
 
 info "Updating packages..."
-run_cmd "yay -Syyu --noconfirm"
+run_cmd "yay -Syyu"
 info "Packages updated"
 
 info "Updating rustup..."

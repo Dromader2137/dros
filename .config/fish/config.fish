@@ -18,7 +18,7 @@ if status is-login
 	export VULKAN_HOME=$HOME/.local/share/vulkan-sdk
 	export VULKAN_DOWNLOAD=$HOME/.local/share/vulkan-sdk/releases
 
-	WLR_RENDERER=vulkan sway
+	WLR_DRM_DEVICES=/dev/dri/card1 WLR_RENDERER=vulkan sway --unsupported-gpu
 end
 
 if status is-interactive

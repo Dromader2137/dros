@@ -8,7 +8,7 @@ function info() { echo -e "\e[32m[INFO]\e[0m $1"; }
 function warn() { echo -e "\e[33m[WARN]\e[0m $1"; }
 function error() { echo -e "\e[31m[ERROR]\e[0m $1"; }
 
-info "You must have sudo privilages on the system!"
+info "You must have sudo privilages on the system to proceed!"
 
 copy_config() {
 	local src="$1"
@@ -28,7 +28,7 @@ run_cmd() {
 	local cmd="$*"
 	echo -e "\n Running: $cmd" >> "$LOG_FILE"
 
-	if ! eval "$cmd" >> "$LOG_FILE" 2>&1; then
+	if ! eval "$cmd" 2>&1 | tee "$LOG_FILE" 2>&1; then
 		error "Command failed: $cmd"
 		echo "---- Output from log ----"
 		tail -n 50 "$LOG_FILE"
