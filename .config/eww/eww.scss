@@ -1,5 +1,5 @@
 * {
-  all: unset; 
+  all: unset;
   font-family: Mononoki Nerd Font;
   font-size: 12pt;
   font-weight: 900;
@@ -32,4 +32,28 @@
 
 .systray {
   background-color: #282828;
+}
+
+menu {
+  padding: 4px;
+  border-style: solid;
+  border-width: 2px;
+  border-color: #ebdbb2;
+  background-color: #282828;
+  color: #ebdbb2;
+
+  menuitem {
+    padding: 2px 4px;
+    background-color: transparent;
+    transition: all .2s ease;
+
+    &:backdrop {
+      background-color: #282828;
+    }
+  }
+
+  menuitem:hover {
+    background-color: #ebdbb2;
+    color: #282828;
+  }
 }
