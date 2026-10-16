@@ -28,7 +28,7 @@ input type:keyboard {
 
 input 1:1:AT_Translated_Set_2_keyboard {
 	xkb_layout "pl-workman"
-	xkb_options "caps:escape"
+	xkb_options "caps:swapescape"
 }
 
 bindsym $mod+t kill
@@ -58,6 +58,7 @@ floating_modifier $mod normal
 
 bindsym $mod+Shift+c reload
 
+bindsym $mod+Escape exec swaylock
 bindsym $mod+Shift+Escape exec shutdown now 
 bindsym $mod+Control+Escape exit
 
@@ -94,14 +95,15 @@ bindsym $mod+Shift+8 move container to workspace number 8, workspace number 8
 bindsym $mod+Shift+9 move container to workspace number 9, workspace number 9
 bindsym $mod+Shift+0 move container to workspace number 10, workspace number 10
 
-
 mode "resize" {
-	bindsym $left resize shrink width 10px
-	bindsym $down resize grow height 10px
-	bindsym $up resize shrink height 10px
-	bindsym $right resize grow width 10px
-	bindsym Return mode "default"
-	bindsym Escape mode "default"
+    bindsym $left exec swaymsg resize grow left 10px || swaymsg resize shrink right 10px
+    bindsym $right exec swaymsg resize grow right 10px || swaymsg resize shrink left 10px
+    bindsym $up exec swaymsg resize grow up 10px || swaymsg resize shrink down 10px
+    bindsym $down exec swaymsg resize grow down 10px || swaymsg resize shrink up 10px
+    bindsym $mod+r mode "default"
+    bindsym r mode "default"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
 }
 
 bindsym $mod+r mode "resize"
