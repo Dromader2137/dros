@@ -12,7 +12,7 @@
 	(box "${brightness >= 30 ? "󰃠" : "󰃞"}  ${brightness}%")
 	(box "${mute == "0" ? "󰕾" : "󰖁"} ${volume}%")
 	(box "${mic-mute == "0" ? "󰍬" : "󰍮"} ${mic-volume}%")
-    (box "${EWW_BATTERY.BAT0.status == "Charging" ? "󱐋" : "󰁹"} ${round(EWW_BATTERY.BAT0.capacity, 0)}%")
+    (box {strlength(EWW_BATTERY) > 0 ? "${EWW_BATTERY.BAT0.status == "Charging" ? "󱐋" : "󰁹"} ${round(EWW_BATTERY.BAT0.capacity, 0)}%" : "No battery"})
     (box "  ${net}")
   ))
 
