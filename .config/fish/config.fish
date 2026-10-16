@@ -22,6 +22,8 @@ if status is-login
 end
 
 if status is-interactive
+	export OLLAMA_API_BASE=http://127.0.0.1:11434
+
 	starship init fish | source
 
 	set fish_greeting
